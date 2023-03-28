@@ -11,7 +11,7 @@ export const RESERVATION_RECIEVED_TENANT_TEMPLATE = `
 <p>
   A decision on the request usually takes 2-3 days from the date of this email.
   You can verify the status of your request by entering your email and
-  Reservation Number here: <a href="<%= it.body.serverUrlStatusRouteAutofill _%>"><%= it.body.serverUrlStatusRoute _%></a>
+  reservation ID here: <%= it.body.serverUrlStatusRoute _%>
 </p>
 <p>
   Please do not forward this email as it contains private information intended
