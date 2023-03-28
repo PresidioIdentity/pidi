@@ -78,6 +78,7 @@
 <script setup lang="ts">
 // Vue
 import { ref, reactive } from 'vue';
+import { useRoute } from 'vue-router';
 // PrimeVue/Validation/etc
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
@@ -96,6 +97,8 @@ import NotFound from './status/NotFound.vue';
 import Pending from './status/Pending.vue';
 import ShowWallet from './status/ShowWallet.vue';
 import { RESERVATION_STATUSES } from '@/helpers/constants';
+
+const route = useRoute();
 
 const toast = useToast();
 
