@@ -99,7 +99,6 @@ const reservationStore = useReservationStore();
 const { reservationDetails } = storeToRefs(useReservationStore());
 
 const showError = ref(false);
-
 const errorMessage = ref('An error occurred'); // Default error message
 
 // Validation
