@@ -31,11 +31,16 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'DM Serif Display', serif;
 }
 
+p { 
+  font-family: 'DM Sans', sans-serif;
+}
+
 h1 {
-  font-size: 3.2em;
+  font-size: 1.8em;
   line-height: 1.1;
 }
 
 a {
+  font-family: 'DM Sans', sans-serif;
   color: $tenant-ui-link-color;
 }

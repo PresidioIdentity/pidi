@@ -9,7 +9,8 @@
             src="/img/logo/Presidio-Identity-Logo-tran.png"
             class="logo-traction"
           />
-          <h1>Presidio Identity</h1>
+          <h1 class="pt-3">Presidio Identity</h1>
+          <p class="pt-0 pb-0">VC Dashboard</p>
         </div>
 
         <!-- Logging In -->
