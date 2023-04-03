@@ -1,6 +1,6 @@
 <template>
   <div class="traction-login grid w-screen h-screen">
-    <div class="col-12 md:col-6 xl:col-4">
+    <div class="col-12 md:col-6 xl:col-6">
       <div class="px-8">
         <div class="image-header pt-6 pb-3">
           <!-- <img src="/img/bc/bc_logo.png" class="logo-bc" /> -->
@@ -63,10 +63,12 @@
       </div>
     </div>
 
-    <div class="cover-image hidden md:block col-0 md:col-6 xl:col-8 p-0">
-      <span v-if="config.frontend.ux.coverImageCopyright" class="copyright">
+    <!-- <div class="cover-image hidden md:block col-lg-5 md:col-6 xl:col-8 p-8"> -->
+    <div class="cover-image mx-auto">
+      <img class="pl-8" src="/img/default-login-image.png" />
+      <!-- <span v-if="config.frontend.ux.coverImageCopyright" class="copyright">
         {{ config.frontend.ux.coverImageCopyright }}
-      </span>
+      </span> -->
     </div>
   </div>
 </template>
@@ -130,12 +132,25 @@ const doGoBack = () => {
 
   img {
     height: 10em;
-    width: 11em;
+    width: 10em;
     border-radius: 50%;
-    box-shadow: 3px 3px 3px rgba($color: #000000, $alpha: 0.4);
+    border: solid 1px #000;
+    box-shadow: 0px 0px 15px #00000034;
+  }
+
+  p {
+    font-size: 1.25em;
   }
 }
+
 .cover-image {
-  background-image: url('/img/default-login-image.jpg');
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    height: 30em;
+  }
 }
 </style>
