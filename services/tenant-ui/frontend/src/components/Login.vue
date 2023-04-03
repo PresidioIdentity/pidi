@@ -1,4 +1,4 @@
-<template>
+heigh<template>
   <div class="traction-login grid w-screen h-screen">
     <div class="col-12 md:col-6 xl:col-6">
       <div class="px-8">
@@ -150,7 +150,7 @@ const doGoBack = () => {
   align-items: center;
 
   img {
-    height: 30em;
+    height: 45vh;
   }
 }
 </style>
