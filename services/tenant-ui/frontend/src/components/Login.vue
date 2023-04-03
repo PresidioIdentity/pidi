@@ -2,13 +2,14 @@
   <div class="traction-login grid w-screen h-screen">
     <div class="col-12 md:col-6 xl:col-4">
       <div class="px-8">
-        <div class="pt-4 pb-6">
-          <img src="/img/bc/bc_logo.png" class="logo-bc" />
+        <div class="image-header pt-6 pb-3">
+          <!-- <img src="/img/bc/bc_logo.png" class="logo-bc" /> -->
 
           <img
-            src="/img/logo/traction-logo-bc-text.svg"
+            src="/img/logo/Presidio-Identity-Logo-tran.png"
             class="logo-traction"
           />
+          <h1>Presidio Identity</h1>
         </div>
 
         <!-- Logging In -->
@@ -38,7 +39,7 @@
         </div>
 
         <!-- Making Reservation -->
-        <div v-else-if="loginMode === LOGIN_MODE.RESERVE" class="py-6">
+        <div v-else-if="loginMode === LOGIN_MODE.RESERVE" class="py-1">
           <Button
             label="Go Back to Sign-in"
             icon="pi pi-arrow-left"
@@ -131,6 +132,16 @@ const doGoBack = () => {
 <style scoped lang="scss">
 // See layout.scss for generalized common login layout stuff
 // Set the image specific to this component here though
+.image-header {
+  text-align: center;
+
+  img {
+    height: 10em;
+    width: 11em;
+    border-radius: 50%;
+    box-shadow: 3px 3px 3px rgba($color: #000000, $alpha: 0.4);
+  }
+}
 .cover-image {
   background-image: url('/img/default-login-image.jpg');
 }

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Serif+Display&display=swap');
 @import 'primevue/resources/themes/lara-light-blue/theme.css'; // includes '~primevue/resources/themes/nova/theme.css'
 @import 'layout.scss';
 @import 'tenantuiComponents.scss';
@@ -24,6 +25,10 @@ body,
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'DM Serif Display', serif;
 }
 
 h1 {
