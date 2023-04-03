@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Serif+Display&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost&family=Poppins:wght@400;600&display=swap');
 @import 'primevue/resources/themes/lara-light-blue/theme.css'; // includes '~primevue/resources/themes/nova/theme.css'
 @import 'layout.scss';
 @import 'tenantuiComponents.scss';
@@ -28,11 +28,12 @@ body,
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'DM Serif Display', serif;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
 }
 
 p { 
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Jost', sans-serif;
 }
 
 h1 {
