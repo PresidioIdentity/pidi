@@ -1,14 +1,14 @@
 <template>
   <div class="traction-login grid w-screen h-screen">
-    <div class="col-12 md:col-6 xl:col-4">
+    <div class="col-12 md:col-6 xl:col-6">
       <div class="px-8">
-        <div class="pt-4 pb-6">
-          <img src="/img/bc/bc_logo.png" class="logo-bc" />
-
+        <div class="image-header pt-6 pb-3">
           <img
-            src="/img/logo/traction-logo-bc-text.svg"
+            src="/img/logo/Presidio-Identity-Logo-tran.png"
             class="logo-traction"
           />
+          <h1 class="pt-3">Presidio Identity</h1>
+          <p class="pt-0 pb-0">VC Dashboard</p>
         </div>
 
         <div class="py-8">
@@ -27,8 +27,11 @@
       </div>
     </div>
 
-    <div class="cover-image hidden md:block col-0 md:col-6 xl:col-8 p-0">
-      <span class="copyright"> Photo by Julia Volk on StockSnap </span>
+    <div class="cover-image mx-auto">
+      <img class="pl-8" src="/img/default-login-image.png" />
+      <!-- <span v-if="config.frontend.ux.coverImageCopyright" class="copyright">
+        {{ config.frontend.ux.coverImageCopyright }}
+      </span> -->
     </div>
   </div>
 </template>
@@ -46,7 +49,30 @@ const { config } = storeToRefs(useConfigStore());
 // See layout.scss for generalized common login layout stuff
 // Set the image specific to this component here though
 .cover-image {
-  background-image: url('/img/innkeeper/innkeeper-login-image.jpg');
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    height: 45vh;
+  }
+}
+
+.image-header {
+  text-align: center;
+
+  img {
+    height: 10em;
+    width: 10em;
+    border-radius: 50%;
+    border: solid 1px #000;
+    box-shadow: 0px 0px 15px #00000034;
+  }
+
+  p {
+    font-size: 1.25em;
+  }
 }
 .oidc-login {
   margin-top: 2em;

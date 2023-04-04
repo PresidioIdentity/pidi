@@ -3,8 +3,6 @@
     <div class="col-12 md:col-6 xl:col-6">
       <div class="px-8">
         <div class="image-header pt-6 pb-3">
-          <!-- <img src="/img/bc/bc_logo.png" class="logo-bc" /> -->
-
           <img
             src="/img/logo/Presidio-Identity-Logo-tran.png"
             class="logo-traction"
