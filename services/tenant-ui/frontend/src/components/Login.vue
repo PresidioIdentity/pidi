@@ -15,7 +15,7 @@
         <div v-if="loginMode === LOGIN_MODE.SIGNIN" class="py-6">
           <LoginForm />
           <div class="mt-6">
-            <p>
+            <!-- <p>
               Don't have an account?
               <a
                 href="#"
@@ -23,15 +23,15 @@
                 @click.prevent="loginMode = LOGIN_MODE.RESERVE"
                 >Create Request!</a
               >
-            </p>
+            </p> -->
 
             <p>
-              Already Submitted Request?
+              First time loggin in?
               <a
                 href="#"
                 class="p-button-link login-mode"
                 @click.prevent="loginMode = LOGIN_MODE.STATUS"
-                >Check Status!</a
+                >Get Credentials!</a
               >
             </p>
           </div>
