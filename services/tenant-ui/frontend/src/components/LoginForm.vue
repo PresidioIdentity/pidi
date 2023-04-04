@@ -99,12 +99,10 @@ const { tenant } = storeToRefs(useTenantStore());
 const formFields = reactive({
   walletId: '',
   walletSecret: '',
-  subscriptionKey: subscriptionKey,
 });
 const rules = {
   walletId: { required },
   walletSecret: { required },
-  subscriptionKey: { required },
 };
 const v$ = useVuelidate(rules, formFields);
 
@@ -120,7 +118,7 @@ const handleSubmit = async (isFormValid: boolean) => {
     await tokenStore.login(
       formFields.walletId,
       formFields.walletSecret,
-      subscriptionKey
+      subscriptionKey.value
     );
     console.log(token.value);
   } catch (err) {
