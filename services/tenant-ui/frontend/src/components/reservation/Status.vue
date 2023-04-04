@@ -57,7 +57,7 @@
       }}</small>
     </div>
 
-    <Button type="submit" class="w-full my-2" label="Check Status" />
+    <Button type="submit" class="w-full my-2" label="Get Wallet Credentials" />
   </form>
 
   <!-- Statuses to check -->
