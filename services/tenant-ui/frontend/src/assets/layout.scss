@@ -92,9 +92,10 @@ body {
     text-align: center;
     padding: 0.5em;
     margin: 0.5em;
-    background-color: $tenant-ui-accent-color;
+    background-color: $tenant-ui-secondary-color;
     text-transform: uppercase;
     word-wrap: break-word;
+    border-radius: 8px;
     .p-progress-spinner {
       width: 1.2em;
       height: 1.2em;
