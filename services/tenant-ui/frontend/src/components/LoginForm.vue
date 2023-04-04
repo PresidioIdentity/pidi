@@ -44,7 +44,7 @@
       <Button
         type="submit"
         class="w-full mt-5"
-        label="Sign-In"
+        label="Sign In"
         :disabled="!!loading"
         :loading="!!loading"
       />
