@@ -40,6 +40,26 @@
       <small v-if="v$.walletSecret.$invalid && submitted" class="p-error">{{
         v$.walletSecret.required.$message
       }}</small>
+    </div>
+
+    <div class="field mt-5 w-full">
+      <!-- Secret -->
+      <label
+        for="subscription-key"
+        :class="{ 'p-error': v$.subscriptionKey.$invalid && submitted }"
+        >Subscription Key
+      </label>
+      <InputText
+        id="subscription-key"
+        v-model="v$.subscriptionKey.$model"
+        type="password"
+        autocomplete="current-password"
+        name="subscriptionkey"
+        class="w-full"
+      />
+      <small v-if="v$.subscriptionKey.$invalid && submitted" class="p-error">{{
+        v$.subscriptionKey.required.$message
+      }}</small>
 
       <Button
         type="submit"
@@ -71,10 +91,12 @@ const toast = useToast();
 const formFields = reactive({
   walletId: '',
   walletSecret: '',
+  subscriptionKey: '',
 });
 const rules = {
   walletId: { required },
   walletSecret: { required },
+  subscriptionKey: { required },
 };
 const v$ = useVuelidate(rules, formFields);
 
@@ -105,6 +127,11 @@ const handleSubmit = async (isFormValid: boolean) => {
       // token is loaded, now go fetch the global data about the tenant
       await tenantStore.getSelf();
       console.log(tenant.value);
+
+      await localStorage.setItem(
+        'subcription_key',
+        JSON.stringify(formFields.subscriptionKey)
+      );
       // TODO: once we get response statuses working correctly again can re-configure this
       // Don't throw errors since not-found and stuff is fine for non-issuers
       try {
