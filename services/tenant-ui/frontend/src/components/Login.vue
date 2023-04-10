@@ -26,7 +26,7 @@
             </p> -->
 
             <p>
-              First time loggin in?
+              First time logging in?
               <a
                 href="#"
                 class="p-button-link login-mode"
