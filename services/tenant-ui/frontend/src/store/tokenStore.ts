@@ -79,7 +79,7 @@ export const useTokenStore = defineStore('token', () => {
     console.log('< clearToken');
   }
 
-  return { token, loading, error, clearToken, login };
+  return { token, key, loading, error, clearToken, login };
 });
 
 export default {
