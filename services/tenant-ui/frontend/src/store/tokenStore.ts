@@ -8,18 +8,24 @@ import { API_PATH } from '@/helpers/constants';
 export const useTokenStore = defineStore('token', () => {
   // state
   const token: any = ref(null);
+  const key: any = ref(null);
   const loading: any = ref(false);
   const error: any = ref(null);
 
   // getters
 
   // actions
-  async function login(username: string, password: string) {
+  async function login(
+    username: string,
+    subscriptionKey: any,
+    password: string
+  ) {
     console.log('> tokenStore.load');
     const payload = {
       wallet_key: password,
     };
     token.value = null;
+    key.value = null;
     error.value = null;
     loading.value = true;
 
@@ -36,6 +42,7 @@ export const useTokenStore = defineStore('token', () => {
       .then((res) => {
         console.log(res);
         token.value = res.data.token;
+        key.value = subscriptionKey;
       })
       .catch((err) => {
         error.value = err;
@@ -57,6 +64,7 @@ export const useTokenStore = defineStore('token', () => {
   function clearToken() {
     console.log('> clearToken');
     token.value = null;
+    key.value = null;
     console.log('< clearToken');
   }
 
