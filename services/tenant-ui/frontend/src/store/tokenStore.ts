@@ -5,6 +5,10 @@ import { useConfigStore } from './configStore';
 import jwtDecode from 'jwt-decode';
 import { API_PATH } from '@/helpers/constants';
 
+import CryptoJS from 'crypto-js';
+
+const KEY_SECRET = import.meta.env.KEY_SECRET_128;
+
 export const useTokenStore = defineStore('token', () => {
   // state
   const token: any = ref(null);
@@ -42,7 +46,14 @@ export const useTokenStore = defineStore('token', () => {
       .then((res) => {
         console.log(res);
         token.value = res.data.token;
-        key.value = subscriptionKey;
+        const subKey = CryptoJS.enc.Utf8.parse(subscriptionKey);
+        const secret = CryptoJS.enc.Utf8.parse(KEY_SECRET);
+        const encrypted = CryptoJS.AES.encrypt(subKey, secret, {
+          mode: CryptoJS.mode.ECB,
+          padding: CryptoJS.pad.ZeroPadding,
+        });
+        encrypted.ciphertext.toString(CryptoJS.enc.Hex);
+        key.value = encrypted;
       })
       .catch((err) => {
         error.value = err;
