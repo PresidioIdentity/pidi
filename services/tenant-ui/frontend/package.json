@@ -17,6 +17,7 @@
     "date-fns": "^2.29.3",
     "json-editor-vue": "^0.10.5",
     "jwt-decode": "^3.1.2",
+    "localstorage-slim": "^2.4.0",
     "oidc-client-ts": "^2.2.2",
     "pinia": "^2.0.33",
     "primeflex": "^3.3.0",
