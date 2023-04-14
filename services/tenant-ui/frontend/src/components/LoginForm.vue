@@ -85,6 +85,8 @@ import { useVuelidate } from '@vuelidate/core';
 // State
 import { useTenantStore, useTokenStore } from '../store';
 import { storeToRefs } from 'pinia';
+// Dependecies
+import ls from 'localstorage-slim';
 
 const toast = useToast();
 
