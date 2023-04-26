@@ -48,4 +48,4 @@ jobs:
         app-name: 'pidi-dashboard'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_186268f9986142308819ca6f13422b18 }}
-        images: 'pivccontainerregistry.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_a1d8a35ae55941649998d79ebcfcfb0c }}/traction-ui:${{ github.sha }}'
+        images: 'pivccontainerregistry.azurecr.io/traction-ui:latest'
