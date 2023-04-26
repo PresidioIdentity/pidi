@@ -30,7 +30,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: pivccontainerregistry.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_a1d8a35ae55941649998d79ebcfcfb0c }}/traction-ui:${{ github.sha }}
+        tags: pivccontainerregistry.azurecr.io/traction-ui:latest
         file: ./Dockerfile
 
   deploy:
