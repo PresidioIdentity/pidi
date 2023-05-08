@@ -5,6 +5,8 @@
 
 // The generatl field wrapper
 .field {
+  font-family: 'Jost', sans-serif;
+
   > label {
     margin-bottom: 2px !important;
     display: block !important;
@@ -23,7 +25,7 @@
     border-radius: 5px;
     &:hover,
     &:focus {
-      border-color: $tenant-ui-secondary-active !important;
+      border-color: $tenant-ui-primary-color !important;
     }
     &:focus {
       box-shadow: 0 0 0.3rem 0.1rem $tenant-ui-shadow !important;

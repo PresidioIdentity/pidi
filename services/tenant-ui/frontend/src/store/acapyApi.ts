@@ -42,6 +42,7 @@ export const useAcapyApi = defineStore('acapyApi', () => {
           accept: 'application/json',
           ...dataConfig.headers,
           Authorization: `Bearer ${tokenStore.token}`,
+          "Ocp-Apim-Subscription-Key": "0b7ba83125f44e71936e2bc3cd31b083" // TODO: Should get from store
         },
       };
       return result;

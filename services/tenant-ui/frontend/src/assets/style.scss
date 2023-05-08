@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost&family=Poppins:wght@400;600&display=swap');
 @import 'primevue/resources/themes/lara-light-blue/theme.css'; // includes '~primevue/resources/themes/nova/theme.css'
 @import 'layout.scss';
 @import 'tenantuiComponents.scss';
@@ -26,11 +27,21 @@ body,
   -webkit-text-size-adjust: 100%;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+}
+
+p { 
+  font-family: 'Jost', sans-serif;
+}
+
 h1 {
-  font-size: 3.2em;
+  font-size: 1.8em;
   line-height: 1.1;
 }
 
 a {
+  font-family: 'DM Sans', sans-serif;
   color: $tenant-ui-link-color;
 }
