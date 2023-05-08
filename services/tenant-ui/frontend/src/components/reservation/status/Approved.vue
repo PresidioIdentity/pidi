@@ -6,12 +6,12 @@
       APPROVED!
     </template>
     <template #content>
-      <p>
-        We have sent a Reservation Password to your email address on
+      <!-- <p>
+        We sent a reservation password to your email address on
         {{ formatDateLong(reservation.updated_at) }}.
-      </p>
+      </p> -->
       <p>
-        Please enter the Reservation Password below to validate your account.
+        Please enter the one time password below to validate your account.
       </p>
 
       <form @submit.prevent="handleSubmit(!v$.$invalid)">
@@ -39,7 +39,7 @@
         </div>
       </form>
       <p>
-        The Reservation Password is only valid for 48 hours from the time it was
+        The one time password is only valid for 48 hours from the time it was
         sent to your email address.
       </p>
     </template>
@@ -71,7 +71,7 @@ import { storeToRefs } from 'pinia';
 const toast = useToast();
 
 const reservationStore = useReservationStore();
-const { reservation } = storeToRefs(useReservationStore());
+const { reservationId } = storeToRefs(useReservationStore());
 
 const showError = ref(false);
 
@@ -101,7 +101,7 @@ const handleSubmit = async (isFormValid: boolean) => {
 
   try {
     await reservationStore.checkIn(
-      reservation.value.reservation_id,
+      reservationId.value,
       formFields.password
     );
   } catch (error: any) {

@@ -39,6 +39,9 @@ export const useInnkeeperTenantsStore = defineStore('innkeeperTenants', () => {
   // A different axios instance with a basepath just of the tenant UI backend
   const backendApi = axios.create({
     baseURL: `${window.location.origin}/${config.value.frontend.apiPath}`,
+    headers: {
+      "Ocp-Apim-Subscription-Key": "0b7ba83125f44e71936e2bc3cd31b083"
+    }
   });
 
   async function listTenants() {

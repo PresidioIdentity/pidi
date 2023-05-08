@@ -14,6 +14,9 @@ export const useInnkeeperTokenStore = defineStore(
     // A raw api call without using the interceptors from the acapyApiTenantStore
     const api = axios.create({
       baseURL: config.value.frontend.tenantProxyPath,
+      headers: {
+        "Ocp-Apim-Subscription-Key": "0b7ba83125f44e71936e2bc3cd31b083"
+      }
     });
 
     // state

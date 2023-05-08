@@ -14,6 +14,9 @@ export const useReservationStore = defineStore('reservation', () => {
   // Needed for the open call to reservation at this point
   const api = axios.create({
     baseURL: config.value.frontend.tenantProxyPath,
+    headers: {
+      "Ocp-Apim-Subscription-Key": "0b7ba83125f44e71936e2bc3cd31b083"
+    }
   });
 
   // A different axios instance with a basepath just of the tenant UI backend
@@ -25,6 +28,7 @@ export const useReservationStore = defineStore('reservation', () => {
   const loading: any = ref(false);
   const error: any = ref(null);
   const reservation: any = ref(null);
+  const reservationId: any = ref(''); // TODO: Verify this isn't the same as 'const reservation' in line above
   const status: Ref<string> = ref('');
   const walletId: Ref<string> = ref('');
   const walletKey: Ref<string> = ref('');
@@ -32,11 +36,13 @@ export const useReservationStore = defineStore('reservation', () => {
   // actions
   function resetState() {
     reservation.value = null;
+    reservationId.value = '';
     status.value = '';
     walletId.value = '';
     walletKey.value = '';
   }
 
+  // TODO: Remove this functionality
   async function makeReservation(payload: any = {}) {
     console.log('> reservationStore.makeReservation');
     error.value = null;
@@ -89,6 +95,7 @@ export const useReservationStore = defineStore('reservation', () => {
     return reservation.value;
   }
 
+  // TODO: Review if we still need this functionality
   async function checkReservation(reservationId: string, email: string) {
     console.log('> reservationStore.checkReservation');
     resetState();
@@ -100,11 +107,11 @@ export const useReservationStore = defineStore('reservation', () => {
       .then((res) => {
         if (res.data) {
           // The API doesn't check email address against res ID but we can do it on the front end at least
-          if (res.data.contact_email !== email) {
+          if (res.data.contact_email.toLowerCase() !== email.toLowerCase()) {
             status.value = RESERVATION_STATUSES.NOT_FOUND;
           } else {
             reservation.value = res.data;
-            status.value = res.data.state;
+            status.value = RESERVATION_STATUSES.APPROVED;
           }
         }
       })
@@ -128,6 +135,65 @@ export const useReservationStore = defineStore('reservation', () => {
     }
     // return data so $onAction.after listeners can add their own handler
     return status.value;
+  }
+
+  async function authenticateAndGetReservationId(email: string, password: string) {
+    console.log('> reservationStore.authenticateAndGetReservationId');
+    error.value = null;
+    loading.value = true;
+
+    // Request body
+    const body = {
+        email: email,
+        password: password
+    };
+
+    // Make api call to authenticate with APIM and if auth'd get reservation id to then checkIn()
+    // TODO: Review if we want to make this api call separate Azure func or an aca-py plugin
+    // TODO: Refactor to use axios, as in all other api calls in this project
+    const response = await fetch(
+        // TODO: Move api url to env var
+        "https://pidi-monetization-newsub-webhook-handler.azurewebsites.net/api/authenticateNewPidiWallet?",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Cache-Control": "no-cache",
+                "Ocp-Apim-Subscription-Key": "0b7ba83125f44e71936e2bc3cd31b083",
+            },
+            body: JSON.stringify(body),
+        }
+    );
+
+    if(response.status === 401) {
+      error.value = "Authentication failed. Check your username and password.";
+      loading.value = false;
+      throw error.value;
+    }
+
+    if(response.status === 204) {
+      error.value = "New wallet subscription not found";
+      loading.value = false;
+      throw error.value;
+    }
+
+    if(response.status === 500) {
+      error.value = "An error occurred. Please contact info@presidioidentity.com and let them know what happened.";
+      loading.value = false;
+      throw error.value;
+    }
+
+    const data = await response.json();
+
+    console.log("response, data");
+    console.log(response);
+    console.log(data);
+    
+    // If we have a reservation ID, then reservation status is 'APPROVED'
+    reservationId.value = data.reservation_id;
+    reservation.value = data.reservation_id;
+    status.value = RESERVATION_STATUSES.APPROVED;
+    loading.value = false;
   }
 
   async function checkIn(reservationId: string, password: string) {
@@ -161,15 +227,17 @@ export const useReservationStore = defineStore('reservation', () => {
 
   return {
     reservation,
+    reservationId,
     loading,
     error,
     status,
     walletId,
     walletKey,
     resetState,
-    makeReservation,
-    checkReservation,
-    checkIn,
+    makeReservation, // TODO: Remove
+    authenticateAndGetReservationId,
+    checkReservation, // TODO: Remove
+    checkIn, // TODO: Remove
   };
 });
 

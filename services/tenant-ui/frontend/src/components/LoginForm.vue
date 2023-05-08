@@ -52,10 +52,11 @@
       <InputText
         id="subscription-key"
         v-model="v$.subscriptionKey.$model"
-        type="password"
+        type="text"
         autocomplete="current-password"
         name="subscriptionkey"
         class="w-full"
+        readonly
       />
       <small v-if="v$.subscriptionKey.$invalid && submitted" class="p-error">{{
         v$.subscriptionKey.required.$message
@@ -87,11 +88,18 @@ import { storeToRefs } from 'pinia';
 
 const toast = useToast();
 
+// State setup
+const tokenStore = useTokenStore();
+// use the loading state from the store to disable the button...
+const { loading, subscriptionKey, token } = storeToRefs(useTokenStore());
+const tenantStore = useTenantStore();
+const { tenant } = storeToRefs(useTenantStore());
+
 // Login Form and validation
 const formFields = reactive({
   walletId: '',
   walletSecret: '',
-  subscriptionKey: '',
+  subscriptionKey: subscriptionKey,
 });
 const rules = {
   walletId: { required },
@@ -99,13 +107,6 @@ const rules = {
   subscriptionKey: { required },
 };
 const v$ = useVuelidate(rules, formFields);
-
-// State setup
-const tokenStore = useTokenStore();
-// use the loading state from the store to disable the button...
-const { loading, token } = storeToRefs(useTokenStore());
-const tenantStore = useTenantStore();
-const { tenant } = storeToRefs(useTenantStore());
 
 // Form submission
 const submitted = ref(false);
@@ -118,8 +119,8 @@ const handleSubmit = async (isFormValid: boolean) => {
   try {
     await tokenStore.login(
       formFields.walletId,
-      formFields.subscriptionKey,
-      formFields.walletSecret
+      formFields.walletSecret,
+      subscriptionKey
     );
     console.log(token.value);
   } catch (err) {
