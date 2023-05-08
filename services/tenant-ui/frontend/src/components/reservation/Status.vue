@@ -7,7 +7,7 @@
     <!-- Email -->
     <div class="field mt-5 w-full">
       <label for="email" :class="{ 'p-error': $v.email.$invalid && submitted }"
-        >Enter your Email Address of request
+        >Enter your Email addressed used to register with Presidio Identity 
       </label>
       <InputText
         id="email"
@@ -34,30 +34,31 @@
       }}</small>
     </div>
 
-    <!-- Reservation Id -->
+    <!-- Password -->
     <div class="field mt-5 w-full">
       <label
-        for="reservation-id"
-        :class="{ 'p-error': $v.reservationId.$invalid && submitted }"
-        >Enter your Reservation ID
+        for="password"
+        :class="{ 'p-error': $v.password.$invalid && submitted }"
+        >Enter your password
       </label>
       <InputText
-        id="reservation-id"
-        v-model="$v.reservationId.$model"
-        name="reservationId"
+        id="password"
+        v-model="$v.password.$model"
+        type="password"
+        name="password"
         class="w-full"
         :class="{
           'p-invalid':
-            ($v.reservationId.$invalid && submitted) ||
+            ($v.password.$invalid && submitted) ||
             status === RESERVATION_STATUSES.NOT_FOUND,
         }"
       />
-      <small v-if="$v.reservationId.$invalid && submitted" class="p-error">{{
-        $v.reservationId.required.$message
+      <small v-if="$v.password.$invalid && submitted" class="p-error">{{
+        $v.password.required.$message
       }}</small>
     </div>
 
-    <Button type="submit" class="w-full my-2" label="Get Wallet Credentials" />
+    <Button type="submit" class="w-full my-2" label="Submit" />
   </form>
 
   <!-- Statuses to check -->
@@ -105,11 +106,11 @@ const { loading, status } = storeToRefs(useReservationStore());
 // Login Form and validation
 const formFields = reactive({
   email: '',
-  reservationId: '',
+  password: ''
 });
 const rules = {
   email: { required, email },
-  reservationId: { required },
+  password: { required }
 };
 const $v = useVuelidate(rules, formFields, { $scope: false });
 
@@ -123,9 +124,9 @@ const handleSubmit = async (isFormValid: boolean) => {
     return;
   }
   try {
-    await reservationStore.checkReservation(
-      formFields.reservationId,
-      formFields.email
+    await reservationStore.authenticateAndGetReservationId(
+      formFields.email,
+      formFields.password
     );
   } catch (err) {
     toast.error(`Failure checking status: ${err}`);

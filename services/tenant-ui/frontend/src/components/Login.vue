@@ -11,6 +11,31 @@
           <p class="pt-0 pb-0">VC Dashboard</p>
         </div>
 
+        <!-- Login with APIM (dev portal) credentials -->
+        <div v-if="loginMode === LOGIN_MODE.APIM_LOGIN" class="py-6">
+          <ApimLoginForm />
+
+          <div class="mt-6">
+            <p>
+              First time logging in?
+              <a
+                href="#"
+                class="p-button-link login-mode"
+                @click.prevent="loginMode = LOGIN_MODE.STATUS"
+                >Finish Cloud Wallet Setup</a
+              >
+            </p>
+            <p>
+              Register and subscribe for access at our 
+              <a
+                href="https://pi-apim-development.developer.azure-api.net/"
+                class="p-button-link login-mode"
+                >Developer Portal</a
+              >
+            </p>
+          </div>
+        </div>
+
         <!-- Logging In -->
         <div v-if="loginMode === LOGIN_MODE.SIGNIN" class="py-6">
           <LoginForm />
@@ -31,7 +56,15 @@
                 href="#"
                 class="p-button-link login-mode"
                 @click.prevent="loginMode = LOGIN_MODE.STATUS"
-                >Get Credentials!</a
+                >Finish Cloud Wallet Setup</a
+              >
+            </p>
+            <p>
+              Register and subscribe for access at our 
+              <a
+                href="https://pi-apim-development.developer.azure-api.net/"
+                class="p-button-link login-mode"
+                >Developer Portal</a
               >
             </p>
           </div>
@@ -78,6 +111,7 @@ import { ref } from 'vue';
 import Button from 'primevue/button';
 import { useConfirm } from 'primevue/useconfirm';
 // Components
+import ApimLoginForm from '@/components/ApimLoginForm.vue'
 import LoginForm from '@/components/LoginForm.vue';
 import Reserve from './reservation/Reserve.vue';
 import Status from './reservation/Status.vue';
@@ -94,11 +128,13 @@ const confirm = useConfirm();
 
 // Other login form swtiching
 enum LOGIN_MODE {
+  APIM_LOGIN,
   SIGNIN,
-  RESERVE,
-  STATUS,
+  RESERVE, // TODO: Remove this
+  STATUS, // TODO: Rename modes for our flow (i.e. status is more complete-registration or similar)
 }
-const loginMode = ref(LOGIN_MODE.SIGNIN);
+// const loginMode = ref(LOGIN_MODE.SIGNIN);
+const loginMode = ref(LOGIN_MODE.APIM_LOGIN);
 
 const goBack = (event: any) => {
   if (status.value === RESERVATION_STATUSES.SHOW_WALLET) {
