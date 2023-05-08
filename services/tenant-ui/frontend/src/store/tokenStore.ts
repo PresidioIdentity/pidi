@@ -98,7 +98,6 @@ export const useTokenStore = defineStore('token', () => {
   async function login(
     username: string,
     password: string,
-    walletSubKey: string
   ) {
     console.log('> tokenStore.load');
     const payload = {
@@ -107,9 +106,6 @@ export const useTokenStore = defineStore('token', () => {
     token.value = null;
     error.value = null;
     loading.value = true;
-
-    console.log('W', walletSubKey);
-    console.log('S', subscriptionKey.value);
 
     // TODO: isolate this to something reusable when we grab an axios connection.
     const configStore = useConfigStore();
