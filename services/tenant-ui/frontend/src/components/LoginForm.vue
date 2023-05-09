@@ -43,7 +43,7 @@
     </div>
 
     <div class="field mt-5 w-full">
-      <!-- Secret -->
+      <!-- Key -->
       <label
         for="subscription-key"
         :class="{ 'p-error': v$.subscriptionKey.$invalid && submitted }"
