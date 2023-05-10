@@ -19,10 +19,7 @@ export const useTokenStore = defineStore('token', () => {
   // getters
 
   // actions
-  async function loginWithApim(
-    email: string,
-    password: string
-  ) {
+  async function loginWithApim(email: string, password: string) {
     console.log('> tokenStore.loginWithApim');
 
     error.value = null;
@@ -30,54 +27,56 @@ export const useTokenStore = defineStore('token', () => {
 
     // Request body
     const body = {
-        email: email,
-        password: password
+      email: email,
+      password: password,
     };
 
     // Make api call to authenticate with APIM and if auth'd get reservation id to then checkIn()
     // TODO: Review if we want to make this api call separate Azure func or an aca-py plugin
     // TODO: Refactor to use axios, as in all other api calls in this project
     const response = await fetch(
-        // TODO: Move api url to env var
-        "https://pidi-monetization-newsub-webhook-handler.azurewebsites.net/api/authenticateApimAndGetSubKey?",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Cache-Control": "no-cache",
-                "Ocp-Apim-Subscription-Key": "0b7ba83125f44e71936e2bc3cd31b083",
-            },
-            body: JSON.stringify(body),
-        }
+      // TODO: Move api url to env var
+      'https://pidi-monetization-newsub-webhook-handler.azurewebsites.net/api/authenticateApimAndGetSubKey?',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+          'Ocp-Apim-Subscription-Key': '0b7ba83125f44e71936e2bc3cd31b083',
+        },
+        body: JSON.stringify(body),
+      }
     );
 
-    if(response.status === 401) {
-      error.value = "Authentication failed. Check your username and password.";
+    if (response.status === 401) {
+      error.value = 'Authentication failed. Check your username and password.';
       loading.value = false;
       throw error.value;
     }
 
-    if(response.status === 204) {
-      error.value = "Subscription not found. Visit the PI Developer Portal to subscribe or contact info@presidioidentity.com for help.";
+    if (response.status === 204) {
+      error.value =
+        'Subscription not found. Visit the PI Developer Portal to subscribe or contact info@presidioidentity.com for help.';
       loading.value = false;
       throw error.value;
     }
 
-    if(response.status === 500) {
-      error.value = "An error occurred. Please contact info@presidioidentity.com and let them know what happened.";
+    if (response.status === 500) {
+      error.value =
+        'An error occurred. Please contact info@presidioidentity.com and let them know what happened.';
       loading.value = false;
       throw error.value;
     }
 
-    const {subscriptions, keys} = await response.json();
+    const { subscriptions, keys } = await response.json();
 
-    console.log("response, subscriptions");
+    console.log('response, subscriptions');
     console.log(response);
     console.log(subscriptions);
     console.log(keys);
 
     // AVIS: TODO:
-    // 1. upon login, get, store, and display user's email or name or org name or other 
+    // 1. upon login, get, store, and display user's email or name or org name or other
     // 2. get and store all <ACTIVE?> subscriptions associated with the user
     // 3. if no active, link them to dev portal to go subscribe or reactivate (can technically do from dashboard honestly)
     // 4. for now, dropdown? to select the subscription/wallet to use (listed by subscription name) - to be replaced by good UI later
@@ -86,10 +85,9 @@ export const useTokenStore = defineStore('token', () => {
     // 7. ?
     //
     // HOLDUP - for above, need to send both all subscriptions and fetch their subscription ids..?
-    //      make another api call to azure func to get the sub key for the selected subscription 
+    //      make another api call to azure func to get the sub key for the selected subscription
     //      OR
-    //      do foreach in the existing call and get all? 
-
+    //      do foreach in the existing call and get all?
 
     // AVIS: TODO: For now, just get and store 0th subscription key
     subscriptionKey.value = keys[0].primaryKey;
@@ -119,9 +117,9 @@ export const useTokenStore = defineStore('token', () => {
       url,
       data: payload,
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "Ocp-Apim-Subscription-Key": subscriptionKey
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Ocp-Apim-Subscription-Key': subscriptionKey,
       },
     })
       .then((res) => {
@@ -154,10 +152,10 @@ export const useTokenStore = defineStore('token', () => {
     return token.value;
   }
 
-  // TODO: 
+  // TODO:
   // - functions to set the subscription token, including encrypting it
   // - function to get the subscription token after decrypting it
-  // - function to 
+  // - function to
 
   function clearToken() {
     console.log('> clearToken');
@@ -166,7 +164,15 @@ export const useTokenStore = defineStore('token', () => {
     console.log('< clearToken');
   }
 
-  return { token, subscriptionKey, loading, error, clearToken, login, loginWithApim };
+  return {
+    token,
+    subscriptionKey,
+    loading,
+    error,
+    clearToken,
+    login,
+    loginWithApim,
+  };
 });
 
 export default {
