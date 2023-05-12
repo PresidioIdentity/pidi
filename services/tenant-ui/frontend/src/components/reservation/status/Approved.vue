@@ -13,16 +13,24 @@
       <p>
         Please enter the one time password below to validate your account.
       </p>
-
       <form @submit.prevent="handleSubmit(!v$.$invalid)">
         <div class="field">
+          <Dropdown
+            v-model="v$.reservation.$model"
+            class="w-full"
+            input-class="w-full"
+            placeholder="Select a Subscription"
+            :options="reservationStore.reservationNames"
+            @change="handleReservationDetails(formFields.reservation)"
+          />
+
           <Password
             v-model="v$.password.$model"
             class="w-full"
             input-class="w-full"
             toggle-mask
             :feedback="false"
-            placeholder="Password"
+            placeholder="One Time Password"
           />
           <small v-if="v$.password.$invalid && submitted" class="p-error">
             {{ v$.password.required.$message }}
@@ -50,6 +58,7 @@ import { reactive, ref } from 'vue';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Password from 'primevue/password';
+import Dropdown from 'primevue/dropdown';
 import { required } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
 import { useToast } from 'vue-toastification';
@@ -66,13 +75,18 @@ const { reservationId } = storeToRefs(useReservationStore());
 
 // Validation
 const formFields = reactive({
+  reservation: '',
   password: '',
 });
 const rules = {
+  reservation: { required },
   password: { required },
 };
 const v$ = useVuelidate(rules, formFields, { $scope: false });
 
+const handleReservationDetails = async (subscriptionName: string) => {
+  await reservationStore.getReservationDetails(subscriptionName);
+};
 // Password form submission
 const submitted = ref(false);
 const handleSubmit = async (isFormValid: boolean) => {
