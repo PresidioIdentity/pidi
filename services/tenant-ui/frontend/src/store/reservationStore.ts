@@ -15,7 +15,7 @@ export const useReservationStore = defineStore('reservation', () => {
   const api = axios.create({
     baseURL: config.value.frontend.tenantProxyPath,
     headers: {
-      "Ocp-Apim-Subscription-Key": "0b7ba83125f44e71936e2bc3cd31b083"
+      'Ocp-Apim-Subscription-Key': '0b7ba83125f44e71936e2bc3cd31b083',
     }
   });
 
@@ -28,7 +28,9 @@ export const useReservationStore = defineStore('reservation', () => {
   const loading: any = ref(false);
   const error: any = ref(null);
   const reservation: any = ref(null);
+  const reservationDetails: any = ref(null);
   const reservationId: any = ref(''); // TODO: Verify this isn't the same as 'const reservation' in line above
+  const reservationNames: any = ref(null);
   const status: Ref<string> = ref('');
   const walletId: Ref<string> = ref('');
   const walletKey: Ref<string> = ref('');
@@ -144,8 +146,8 @@ export const useReservationStore = defineStore('reservation', () => {
 
     // Request body
     const body = {
-        email: email,
-        password: password
+      email: email,
+      password: password
     };
 
     // Make api call to authenticate with APIM and if auth'd get reservation id to then checkIn()
@@ -188,16 +190,30 @@ export const useReservationStore = defineStore('reservation', () => {
     console.log("response, data");
     console.log(response);
     console.log(data);
-    
+
+    const tenantNames = [];
+    for (let i = 0; i < data.pending_reservations.length; i++)
+      tenantNames.push(data.pending_reservations[i].tenant_name);
+
     // If we have a reservation ID, then reservation status is 'APPROVED'
     reservationId.value = data.reservation_id;
-    reservation.value = data.reservation_id;
+    reservation.value = data.pending_reservations;
+    reservationNames.value = tenantNames;
     status.value = RESERVATION_STATUSES.APPROVED;
     loading.value = false;
   }
 
+  async function getReservationDetails(reservationName: string) {
+    const reservations = reservation.value;
+    const foundReservation = reservations.find(
+      (r: any) => r.tenant_name === reservationName
+    );
+
+    reservationId.value = foundReservation.reservation_id;
+  }
+
   async function checkIn(reservationId: string, password: string) {
-    console.log('> reservationStore.checkIn');
+    console.log('> reservationStore.checkIn', reservationId);
     error.value = null;
     loading.value = true;
     await api
@@ -228,6 +244,7 @@ export const useReservationStore = defineStore('reservation', () => {
   return {
     reservation,
     reservationId,
+    reservationNames,
     loading,
     error,
     status,
@@ -237,6 +254,7 @@ export const useReservationStore = defineStore('reservation', () => {
     makeReservation, // TODO: Remove
     authenticateAndGetReservationId,
     checkReservation, // TODO: Remove
+    getReservationDetails,
     checkIn, // TODO: Remove
   };
 });
