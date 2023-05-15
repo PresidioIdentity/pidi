@@ -47,8 +47,8 @@
         type="submit"
         class="w-full mt-5"
         label="Sign In"
-        :disabled="!!loading"
-        :loading="!!loading"
+        :disabled="!!loadingToken || !!loadingReservation"
+        :loading="!!loadingToken || !!loadingReservation"
       />
     </div>
   </form>
@@ -85,11 +85,12 @@ const tokenStore = useTokenStore();
 const reservationStore = useReservationStore();
 
 // use the loading state from the store to disable the button...
-const { loading, subscriptionKey } = storeToRefs(useTokenStore());
+const { loading: loadingToken, subscriptionKey } = storeToRefs(useTokenStore());
 const tenantStore = useTenantStore();
 const { tenant } = storeToRefs(useTenantStore());
-const { reservationId } = storeToRefs(useReservationStore());
-
+const { reservationId, loading: loadingReservation } = storeToRefs(
+  useReservationStore()
+);
 
 // Props
 const props = defineProps<{
