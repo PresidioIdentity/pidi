@@ -85,7 +85,11 @@ const tokenStore = useTokenStore();
 const reservationStore = useReservationStore();
 
 // use the loading state from the store to disable the button...
-const { loading: loadingToken, subscriptionKey } = storeToRefs(useTokenStore());
+const {
+  loading: loadingToken,
+  subscriptionKey,
+  wallets,
+} = storeToRefs(useTokenStore());
 const tenantStore = useTenantStore();
 const { tenant } = storeToRefs(useTenantStore());
 const { reservationId, loading: loadingReservation } = storeToRefs(
@@ -115,6 +119,9 @@ const handleSubmit = async (isFormValid: boolean) => {
       formFields.email,
       formFields.password
     );
+
+    await reservationStore.getApprovedWallets(wallets.value);
+
     props.select();
   } catch (err) {
     console.error(err);

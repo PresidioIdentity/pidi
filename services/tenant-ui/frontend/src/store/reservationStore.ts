@@ -5,7 +5,7 @@ import {
 } from '@/helpers/constants';
 import axios from 'axios';
 import { defineStore, storeToRefs } from 'pinia';
-import { ref, Ref } from 'vue';
+import { ref, Ref, shallowRef } from 'vue';
 import { useConfigStore } from './configStore';
 
 export const useReservationStore = defineStore('reservation', () => {
@@ -27,11 +27,12 @@ export const useReservationStore = defineStore('reservation', () => {
   // state
   const loading: any = ref(false);
   const error: any = ref(null);
-  const reservation: any = ref(null);      // TODO: remove this and use v-for of reservations
-  const reservationDetails: any = ref(null);
+  const reservation: any = shallowRef(null);
+  const reservationDetails: any = ref(null); // TODO: remove this and use v-for of reservations
   const reservationId: any = ref(''); // TODO: Verify this isn't the same as 'const reservation' in line above
   const reservationNames: any = ref(null);      // TODO: remove this and use v-for of reservations
   const status: Ref<string> = ref('');
+  const approvedWallets: any = ref(null);
   const wallets: any = ref(null);
   const walletId: Ref<string> = ref('');
   const walletKey: Ref<string> = ref('');
@@ -148,7 +149,7 @@ export const useReservationStore = defineStore('reservation', () => {
     // Request body
     const body = {
       email: email,
-      password: password
+      password: password,
     };
 
     // Make api call to authenticate with APIM and if auth'd get reservation id to then checkIn()
@@ -214,6 +215,17 @@ export const useReservationStore = defineStore('reservation', () => {
     reservationId.value = foundReservation.reservation_id;
   }
 
+  async function getApprovedWallets(subscriptions: any) {
+    loading.value = true;
+    const approved = await subscriptions.filter((s: any) => {
+      return !reservation.value.some((r: any) => {
+        return s.displayName === r.tenant_name;
+      });
+    });
+    approvedWallets.value = approved;
+    loading.value = false;
+  }
+
   async function checkIn(reservationId: string, password: string) {
     console.log('> reservationStore.checkIn', reservationId);
     error.value = null;
@@ -250,14 +262,15 @@ export const useReservationStore = defineStore('reservation', () => {
     loading,
     error,
     status,
-    wallets,
+    approvedWallets,
     walletId,
     walletKey,
     resetState,
-    makeReservation, // TODO: Remove
+    getApprovedWallets,
+    makeReservation, // TODO: Remove 
     authenticateAndGetReservationId,
     checkReservation, // TODO: Remove
-    getReservationDetails,
+    getReservationDetails, // TODO: Remove
     checkIn, // TODO: Remove
   };
 });

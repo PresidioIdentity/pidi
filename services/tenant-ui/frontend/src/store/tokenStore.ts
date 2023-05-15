@@ -1,5 +1,5 @@
 import { defineStore, storeToRefs } from 'pinia';
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 import axios from 'axios';
 import { useConfigStore } from './configStore';
 import jwtDecode from 'jwt-decode';
@@ -11,6 +11,7 @@ export const useTokenStore = defineStore('token', () => {
   // state
   const token: any = ref(null);
   const subscriptionKey: any = ref(null);
+  const wallets: any = shallowRef(null);
   const loading: any = ref(false);
   const error: any = ref(null);
 
@@ -68,11 +69,6 @@ export const useTokenStore = defineStore('token', () => {
 
     const { subscriptions, keys } = await response.json();
 
-    console.log('response, subscriptions');
-    console.log(response);
-    console.log(subscriptions);
-    console.log(keys);
-
     // AVIS: TODO:
     // 1. upon login, get, store, and display user's email or name or org name or other
     // 2. get and store all <ACTIVE?> subscriptions associated with the user
@@ -88,7 +84,9 @@ export const useTokenStore = defineStore('token', () => {
     //      do foreach in the existing call and get all?
 
     // AVIS: TODO: For now, just get and store 0th subscription key
+    wallets.value = subscriptions;
     subscriptionKey.value = keys[0].primaryKey;
+    console.log('< tokenStore.loginWithApim');
     loading.value = false;
   }
 
@@ -165,6 +163,7 @@ export const useTokenStore = defineStore('token', () => {
   return {
     token,
     subscriptionKey,
+    wallets,
     loading,
     error,
     clearToken,
