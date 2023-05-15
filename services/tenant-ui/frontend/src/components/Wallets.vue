@@ -1,17 +1,28 @@
 <template>
-  <div v-if="!loading" class="block">
-    <h2>Approved</h2>
+  <div v-if="!loading">
+    <h2 class="mb-5">Active</h2>
+    <h4 v-if="!approvedWallets">No Active Wallets.</h4>
     <div
       v-for="(approved, index) in approvedWallets"
       :key="index"
       class="grid mb-10"
     >
-      <div class="col-2 p-5 mr-5 bg-blue-500">{{ approved.displayName }}</div>
+      <div
+        class="col p-5 mb-5 shadow-4 border-round-md flex flex-row justify-content-between"
+      >
+        <h3>{{ approved.displayName }}</h3>
+        <Button label="Select" />
+      </div>
     </div>
-    <h2>Pending</h2>
+    <h2 class="mb-5">Pending</h2>
     <h4 v-if="!reservation">No Pending Wallets.</h4>
-    <div v-for="(res, index) in reservation" :key="index" class="grid">
-      <div class="col-2 p-5 mr-5 bg-yellow-500">{{ res.tenant_name }}</div>
+    <div v-for="(res, index) in reservation" :key="index" class="grid mb-10">
+      <div
+        class="col p-5 mb-5 shadow-4 border-round-md flex flex-row justify-content-between"
+      >
+        <h3>{{ res.tenant_name }}</h3>
+        <Button label="Activate" />
+      </div>
     </div>
   </div>
   <div v-if="loading" flex align-items-center justify-content-center>
@@ -24,6 +35,7 @@
 import { ref, onMounted } from 'vue';
 // PrimeVue/Validation/etc
 import ProgressSpinner from 'primevue/button';
+import Button from 'primevue/button';
 // State
 import { useReservationStore, useTokenStore } from '@/store';
 import { storeToRefs } from 'pinia';
