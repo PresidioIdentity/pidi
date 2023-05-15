@@ -85,8 +85,6 @@ import { useVuelidate } from '@vuelidate/core';
 // State
 import { useTenantStore, useTokenStore } from '../store';
 import { storeToRefs } from 'pinia';
-// Dependecies
-import ls from 'localstorage-slim';
 
 const toast = useToast();
 
@@ -135,11 +133,6 @@ const handleSubmit = async (isFormValid: boolean) => {
       await tenantStore.getSelf();
       console.log(tenant.value);
 
-      await ls.set(
-        'subcription_key',
-        JSON.stringify(formFields.subscriptionKey),
-        { encrypt: true }
-      );
       // TODO: once we get response statuses working correctly again can re-configure this
       // Don't throw errors since not-found and stuff is fine for non-issuers
       try {
