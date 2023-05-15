@@ -64,7 +64,7 @@ import { useToast } from 'vue-toastification';
 import { required } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
 // State
-import { useTenantStore, useTokenStore } from '../store';
+import { useTenantStore, useTokenStore, useReservationStore } from '../store';
 import { storeToRefs } from 'pinia';
 
 const toast = useToast();
@@ -82,10 +82,19 @@ const v$ = useVuelidate(rules, formFields);
 
 // State setup
 const tokenStore = useTokenStore();
+const reservationStore = useReservationStore();
+
 // use the loading state from the store to disable the button...
 const { loading, subscriptionKey } = storeToRefs(useTokenStore());
 const tenantStore = useTenantStore();
 const { tenant } = storeToRefs(useTenantStore());
+const { reservationId } = storeToRefs(useReservationStore());
+
+
+// Props
+const props = defineProps<{
+  select: Function;
+}>();
 
 // Form submission
 const submitted = ref(false);
@@ -96,11 +105,16 @@ const handleSubmit = async (isFormValid: boolean) => {
     return;
   }
   try {
+    await reservationStore.authenticateAndGetReservationId(
+      formFields.email,
+      formFields.password
+    );
+
     await tokenStore.loginWithApim(
       formFields.email,
       formFields.password
     );
-    console.log(subscriptionKey.value);
+    props.select();
   } catch (err) {
     console.error(err);
     toast.error(`Failure getting subscription key: ${err}`);

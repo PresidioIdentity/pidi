@@ -1,11 +1,9 @@
-import { defineStore } from 'pinia';
+import { defineStore, storeToRefs } from 'pinia';
 import { ref } from 'vue';
 import axios from 'axios';
 import { useConfigStore } from './configStore';
 import jwtDecode from 'jwt-decode';
 import { API_PATH } from '@/helpers/constants';
-
-import CryptoJS from 'crypto-js';
 
 //const KEY_SECRET = import.meta.env.KEY_SECRET_128;
 

@@ -27,11 +27,12 @@ export const useReservationStore = defineStore('reservation', () => {
   // state
   const loading: any = ref(false);
   const error: any = ref(null);
-  const reservation: any = ref(null);
+  const reservation: any = ref(null);      // TODO: remove this and use v-for of reservations
   const reservationDetails: any = ref(null);
   const reservationId: any = ref(''); // TODO: Verify this isn't the same as 'const reservation' in line above
-  const reservationNames: any = ref(null);
+  const reservationNames: any = ref(null);      // TODO: remove this and use v-for of reservations
   const status: Ref<string> = ref('');
+  const wallets: any = ref(null);
   const walletId: Ref<string> = ref('');
   const walletKey: Ref<string> = ref('');
 
@@ -191,6 +192,7 @@ export const useReservationStore = defineStore('reservation', () => {
     console.log(response);
     console.log(data);
 
+    // TODO: remove this and use v-for of reservations
     const tenantNames = [];
     for (let i = 0; i < data.pending_reservations.length; i++)
       tenantNames.push(data.pending_reservations[i].tenant_name);
@@ -248,6 +250,7 @@ export const useReservationStore = defineStore('reservation', () => {
     loading,
     error,
     status,
+    wallets,
     walletId,
     walletKey,
     resetState,
