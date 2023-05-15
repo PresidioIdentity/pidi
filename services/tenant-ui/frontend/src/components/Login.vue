@@ -13,10 +13,10 @@
 
         <!-- Login with APIM (dev portal) credentials -->
         <div v-if="loginMode === LOGIN_MODE.APIM_LOGIN" class="py-6">
-          <ApimLoginForm />
+          <ApimLoginForm :select="selectWallet" />
 
           <div class="mt-6">
-            <p>
+            <!-- <p>
               First time logging in?
               <a
                 href="#"
@@ -24,9 +24,9 @@
                 @click.prevent="loginMode = LOGIN_MODE.STATUS"
                 >Finish Cloud Wallet Setup</a
               >
-            </p>
+            </p> -->
             <p>
-              Register and subscribe for access at our 
+              Register and subscribe for access at our
               <a
                 href="https://pi-apim-development.developer.azure-api.net/"
                 class="p-button-link login-mode"
@@ -36,11 +36,22 @@
           </div>
         </div>
 
+        <div v-if="loginMode === LOGIN_MODE.WALLET_SELECT" class="py-1">
+          <Button
+            label="Go Back to Sign-In"
+            icon="pi pi-arrow-left"
+            class="p-button-text"
+            @click="goBack($event)"
+          />
+
+          <Wallets />
+        </div>
+
         <!-- Logging In -->
-        <div v-if="loginMode === LOGIN_MODE.SIGNIN" class="py-6">
+        <!-- <div v-if="loginMode === LOGIN_MODE.SIGNIN" class="py-6">
           <LoginForm />
           <div class="mt-6">
-            <!-- <p>
+            <p>
               Don't have an account?
               <a
                 href="#"
@@ -48,7 +59,7 @@
                 @click.prevent="loginMode = LOGIN_MODE.RESERVE"
                 >Create Request!</a
               >
-            </p> -->
+            </p>
 
             <p>
               First time logging in?
@@ -68,10 +79,10 @@
               >
             </p>
           </div>
-        </div>
+        </div> -->
 
         <!-- Making Reservation -->
-        <div v-else-if="loginMode === LOGIN_MODE.RESERVE" class="py-1">
+        <!-- <div v-else-if="loginMode === LOGIN_MODE.RESERVE" class="py-1">
           <Button
             label="Go Back to Sign-in"
             icon="pi pi-arrow-left"
@@ -79,10 +90,10 @@
             @click="goBack($event)"
           />
           <Reserve />
-        </div>
+        </div> -->
 
         <!-- Checking Status -->
-        <div v-else-if="loginMode === LOGIN_MODE.STATUS" class="py-6">
+        <!-- <div v-else-if="loginMode === LOGIN_MODE.STATUS" class="py-6">
           <Button
             label="Go Back to Sign-in"
             icon="pi pi-arrow-left"
@@ -90,7 +101,7 @@
             @click="goBack($event)"
           />
           <Status />
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -112,7 +123,8 @@ import { useRoute, useRouter } from 'vue-router';
 import Button from 'primevue/button';
 import { useConfirm } from 'primevue/useconfirm';
 // Components
-import ApimLoginForm from '@/components/ApimLoginForm.vue'
+import ApimLoginForm from '@/components/ApimLoginForm.vue';
+import Wallets from '@/components/Wallets.vue';
 import LoginForm from '@/components/LoginForm.vue';
 import Reserve from './reservation/Reserve.vue';
 import Status from './reservation/Status.vue';
@@ -136,9 +148,11 @@ enum LOGIN_MODE {
   SIGNIN,
   RESERVE, // TODO: Remove this
   STATUS, // TODO: Rename modes for our flow (i.e. status is more complete-registration or similar)
+  WALLET_SELECT,
 }
 // const loginMode = ref(LOGIN_MODE.SIGNIN);
 const loginMode = ref(LOGIN_MODE.APIM_LOGIN);
+// const loginMode = ref(LOGIN_MODE.WALLET_SELECT);
 
 const goBack = (event: any) => {
   if (status.value === RESERVATION_STATUSES.SHOW_WALLET) {
@@ -156,8 +170,13 @@ const goBack = (event: any) => {
     doGoBack();
   }
 };
+
+const selectWallet = () => {
+  loginMode.value = LOGIN_MODE.WALLET_SELECT;
+};
+
 const doGoBack = () => {
-  loginMode.value = LOGIN_MODE.SIGNIN;
+  loginMode.value = LOGIN_MODE.APIM_LOGIN;
   reservationStore.resetState();
   router.push('/');
 };
