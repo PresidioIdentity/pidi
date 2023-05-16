@@ -26,6 +26,7 @@ export const useReservationStore = defineStore('reservation', () => {
 
   // state
   const loading: any = ref(false);
+  const loadingWallets: any = ref(false);
   const error: any = ref(null);
   const reservation: any = shallowRef(null);
   const reservationDetails: any = ref(null); // TODO: remove this and use v-for of reservations
@@ -216,14 +217,13 @@ export const useReservationStore = defineStore('reservation', () => {
   }
 
   async function getApprovedWallets(subscriptions: any) {
-    loading.value = true;
     const approved = await subscriptions.filter((s: any) => {
       return !reservation.value.some((r: any) => {
         return s.displayName === r.tenant_name;
       });
     });
+    console.log(approved);
     approvedWallets.value = approved;
-    loading.value = false;
   }
 
   async function checkIn(reservationId: string, password: string) {
@@ -260,9 +260,11 @@ export const useReservationStore = defineStore('reservation', () => {
     reservationId,
     reservationNames,
     loading,
+    loadingWallets,
     error,
     status,
     approvedWallets,
+    wallets,
     walletId,
     walletKey,
     resetState,

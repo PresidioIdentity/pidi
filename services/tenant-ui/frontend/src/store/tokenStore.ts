@@ -10,6 +10,9 @@ import { API_PATH } from '@/helpers/constants';
 export const useTokenStore = defineStore('token', () => {
   // state
   const token: any = ref(null);
+  // TODO: maybe remove or store and remove from localstorage
+  const userEmail: any = ref('');
+  const userPass: any = ref('');
   const subscriptionKey: any = ref(null);
   const wallets: any = shallowRef(null);
   const loading: any = ref(false);
@@ -84,6 +87,8 @@ export const useTokenStore = defineStore('token', () => {
     //      do foreach in the existing call and get all?
 
     // AVIS: TODO: For now, just get and store 0th subscription key
+    userEmail.value = email;
+    userPass.value = password;
     wallets.value = subscriptions;
     subscriptionKey.value = keys[0].primaryKey;
     console.log('< tokenStore.loginWithApim');
@@ -93,7 +98,7 @@ export const useTokenStore = defineStore('token', () => {
   async function login(
     username: string,
     password: string,
-    subscriptionKey: any
+    walletSubKey: string
   ) {
     console.log('> tokenStore.load');
     const payload = {
@@ -102,6 +107,9 @@ export const useTokenStore = defineStore('token', () => {
     token.value = null;
     error.value = null;
     loading.value = true;
+
+    console.log('W', walletSubKey);
+    console.log('S', subscriptionKey.value);
 
     // TODO: isolate this to something reusable when we grab an axios connection.
     const configStore = useConfigStore();
@@ -115,11 +123,10 @@ export const useTokenStore = defineStore('token', () => {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        'Ocp-Apim-Subscription-Key': subscriptionKey,
+        'Ocp-Apim-Subscription-Key': subscriptionKey.value,
       },
     })
       .then((res) => {
-        console.log(res);
         token.value = res.data.token;
 
         // const subKey = CryptoJS.enc.Utf8.parse(subscriptionKey);
@@ -156,12 +163,16 @@ export const useTokenStore = defineStore('token', () => {
   function clearToken() {
     console.log('> clearToken');
     token.value = null;
+    userEmail.value = null;
+    userPass.value = null;
     subscriptionKey.value = null;
     console.log('< clearToken');
   }
 
   return {
     token,
+    userEmail,
+    userPass,
     subscriptionKey,
     wallets,
     loading,
