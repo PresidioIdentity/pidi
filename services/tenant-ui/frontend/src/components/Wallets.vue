@@ -1,4 +1,12 @@
 <template>
+  <div>
+    <Button
+      label="Refresh"
+      class="w-full mb-3"
+      :loading="!!activateWalletLoading"
+      @click="goBack"
+    />
+  </div>
   <div v-if="!activateWalletLoading">
     <!-- Active Wallets -->
     <h2 class="mb-5">Active</h2>
@@ -109,7 +117,7 @@
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 // PrimeVue/Validation/etc
-import ProgressSpinner from 'primevue/button';
+import ProgressSpinner from 'primevue/progressspinner';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
@@ -241,6 +249,19 @@ const handleActive = async (isFormValid: boolean) => {
   }
 };
 
+const refresh = async () => {
+  activateWalletLoading.value = true;
+  await reservationStore.authenticateAndGetReservationId(
+    userEmail.value,
+    userPass.value
+  );
+
+  await tokenStore.loginWithApim(userEmail.value, userPass.value);
+
+  await reservationStore.getApprovedWallets(wallets.value);
+  activateWalletLoading.value = false;
+};
+
 const goBack = (event: any) => {
   if (status.value === RESERVATION_STATUSES.SHOW_WALLET) {
     confirm.require({
@@ -261,46 +282,7 @@ const goBack = (event: any) => {
 const doGoBack = () => {
   visible.value = false;
   reservationStore.resetState();
-};
-const handlePending = async (isFormValid: boolean) => {
-  activateWalletLoading.value = true;
-
-  if (!isFormValid) {
-    loadingRes.value = false;
-    loadingToken.value = false;
-    return;
-  }
-  try {
-    await reservationStore.checkIn(
-      reservationId.value,
-      pendingFormFeilds.password
-    );
-    await tokenStore.loginWithApim(userEmail.value, userPass.value);
-    await reservationStore.getApprovedWallets(wallets.value);
-  } catch (error: any) {
-    /**
-     * If error is 401, check if the reservation is expired.
-     * If not expired, show the incorrect password error.
-     * Otherwise send the error to Toast
-     */
-    const resp = error.response;
-    const exp = resp.data.match(/expired/i);
-    if (resp.status === 401 && exp) {
-      errorMessage.value = 'Reservation has expired.';
-      showError.value = true;
-    } else if (resp.status === 401) {
-      errorMessage.value = 'Incorrect password. Please try again.';
-      showError.value = true;
-    } else {
-      toast.error(resp.data);
-    }
-  } finally {
-    visible.value = false;
-    activateWalletLoading.value = false;
-    submitted.value = false;
-    loadingRes.value = false;
-    loadingToken.value = false;
-  }
+  refresh();
 };
 </script>
 
