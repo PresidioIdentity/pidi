@@ -52,7 +52,7 @@
         </small>
         <Button
           type="submit"
-          label="Validate"
+          label="Activate"
           class="w-full mt-3"
           :loading="loading"
         />

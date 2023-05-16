@@ -1,16 +1,19 @@
 <template>
-  <Card class="info-card mt-4 mb-6">
-    <template #title>
+  <div>
+    <!-- <template #title>
       <i class="pi pi-check-circle info-card-icon"></i> <br />
       VALIDATED!
-    </template>
-    <template #content>
+    </template> -->
+    <!-- <template #content> -->
+    <div class="text_container">
+      <i class="pi pi-check-circle" :style="{ fontSize: '3em' }"></i> <br />
+      <h1 :style="{ margin: 0, padding: 0 }">Activated!</h1>
+    </div>
+    <div>
       <!-- If the user has just completed their password validation, to show the wallet details -->
-      <p>
-        Your reservation is validated successfully. <br />
-        Here is your new Wallet ID and Wallet Key associated with the email
-        address mentioned while registering.
-      </p>
+      Your wallet has been activated successfully. <br />
+      Here is your new Wallet ID and Wallet Key associated with the email
+      address mentioned while registering.
 
       <div class="field mt-5 w-full">
         <label for="wallet-id">Wallet ID</label>
@@ -52,20 +55,29 @@
           />
         </div>
       </div>
-    </template>
-    <template #footer>
-      <hr />
+    </div>
+    <!-- </template> -->
+    <!-- <template #footer> -->
+    <div>
+      <Divider />
       Please save your newly generated Wallet ID and Wallet Key in a secure
       location. You will loose the data once this window is closed or you go
       back to sign-in. We will never share these information over the email nor
       do we re-issue upon request.
-    </template>
-  </Card>
+      <Divider />
+      <div class="text_container">
+        <h2>You can safely close this screen.</h2>
+      </div>
+      <!-- </template> -->
+    </div>
+  </div>
+  <!-- </Card> -->
 </template>
 
 <script setup lang="ts">
 // PrimeVue/Validation/etc
 import Card from 'primevue/card';
+import Divider from 'primevue/divider';
 import Password from 'primevue/password';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
@@ -94,3 +106,13 @@ const copyWalletKey = () => {
   toast.info('Copied Wallet Key to clipboard!');
 };
 </script>
+
+<style scoped lang="scss">
+.text_container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+</style>

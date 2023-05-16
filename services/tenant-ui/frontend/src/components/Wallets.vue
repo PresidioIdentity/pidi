@@ -32,11 +32,13 @@
     </div>
   </div>
   <!-- Input Form -->
+  <ConfirmDialog id="confirm" />
   <Dialog
-    v-model:visible="visible"
+    :visible="visible"
     modal
-    :header="isActive ? 'Enter Wallet Details' : 'Active Wallet'"
+    :header="isActive ? 'Enter Wallet Details' : 'Activate Wallet'"
     :style="{ width: '50vw' }"
+    @update:visible="goBack($event)"
   >
     <!-- Active Input -->
     <form v-if="isActive" @submit.prevent="handleActive(!vActive$.$invalid)">
@@ -105,11 +107,14 @@
 <script setup lang="ts">
 // Vue
 import { ref, reactive } from 'vue';
+import { useRouter } from 'vue-router';
 // PrimeVue/Validation/etc
 import ProgressSpinner from 'primevue/button';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
+import ConfirmDialog from 'primevue/confirmdialog';
+import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'vue-toastification';
 import { required } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
@@ -118,6 +123,7 @@ import Status from './reservation/Status.vue';
 // State
 import { useReservationStore, useTokenStore, useTenantStore } from '@/store';
 import { storeToRefs } from 'pinia';
+import { RESERVATION_STATUSES } from '@/helpers/constants';
 
 const reservationStore = useReservationStore();
 const tokenStore = useTokenStore();
@@ -125,8 +131,10 @@ const tenantStore = useTenantStore();
 const {
   approvedWallets,
   reservation,
+  reservationDetails,
   loading: loadingRes,
   reservationId,
+  status,
 } = storeToRefs(useReservationStore());
 const {
   userEmail,
@@ -141,6 +149,8 @@ const showError = ref(false);
 const errorMessage = ref('An error occurred');
 
 const toast = useToast();
+const confirm = useConfirm();
+const router = useRouter();
 
 // Form and validation
 const activeFormFields = reactive({
@@ -229,6 +239,28 @@ const handleActive = async (isFormValid: boolean) => {
       submitted.value = false;
     }
   }
+};
+
+const goBack = (event: any) => {
+  if (status.value === RESERVATION_STATUSES.SHOW_WALLET) {
+    confirm.require({
+      target: event.currentTarget,
+      message:
+        'Are you sure you want to leave this page? You will not be able to retrieve these details again.',
+      header: 'Have you saved your Wallet ID and Key Somewhere?',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        doGoBack();
+      },
+    });
+  } else {
+    doGoBack();
+  }
+};
+
+const doGoBack = () => {
+  visible.value = false;
+  reservationStore.resetState();
 };
 const handlePending = async (isFormValid: boolean) => {
   activateWalletLoading.value = true;

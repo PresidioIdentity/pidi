@@ -41,7 +41,7 @@ export const useReservationStore = defineStore('reservation', () => {
   // actions
   function resetState() {
     reservation.value = null;
-    reservationId.value = '';
+    reservationDetails.value = '';
     status.value = '';
     walletId.value = '';
     walletKey.value = '';
@@ -215,7 +215,6 @@ export const useReservationStore = defineStore('reservation', () => {
 
     reservationId.value = foundReservation.reservation_id;
     reservationDetails.value = foundReservation;
-    console.log(reservationDetails.value);
   }
 
   async function getApprovedWallets(subscriptions: any) {
