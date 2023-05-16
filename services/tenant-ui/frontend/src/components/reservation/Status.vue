@@ -1,11 +1,11 @@
 <template>
   <!-- Reservation lookup form -->
-  <form
+  <!-- <form
     v-if="status !== RESERVATION_STATUSES.SHOW_WALLET"
     @submit.prevent="handleSubmit(!$v.$invalid)"
-  >
+  > -->
     <!-- Email -->
-    <div class="field mt-5 w-full">
+    <!-- <div class="field mt-5 w-full">
       <label for="email" :class="{ 'p-error': $v.email.$invalid && submitted }"
         >Enter your Email addressed used to register with Presidio Identity 
       </label>
@@ -32,10 +32,10 @@
       <small v-else-if="$v.email.$invalid && submitted" class="p-error">{{
         $v.email.required.$message
       }}</small>
-    </div>
+    </div> -->
 
     <!-- Password -->
-    <div class="field mt-5 w-full">
+    <!-- <div class="field mt-5 w-full">
       <label
         for="password"
         :class="{ 'p-error': $v.password.$invalid && submitted }"
@@ -56,10 +56,10 @@
       <small v-if="$v.password.$invalid && submitted" class="p-error">{{
         $v.password.required.$message
       }}</small>
-    </div>
+    </div> -->
 
-    <Button type="submit" class="w-full my-2" label="Submit" />
-  </form>
+    <!-- <Button type="submit" class="w-full my-2" label="Submit" /> -->
+  <!-- </form> -->
 
   <div>
     <Approved v-if="status === RESERVATION_STATUSES.APPROVED" />

@@ -35,7 +35,7 @@
   <Dialog
     v-model:visible="visible"
     modal
-    header="Enter Wallet Details"
+    :header="isActive ? 'Enter Wallet Details' : 'Active Wallet'"
     :style="{ width: '50vw' }"
   >
     <!-- Active Input -->
@@ -95,30 +95,7 @@
     </form>
 
     <!-- Pending Input  -->
-    <form v-if="isPending" @submit.prevent="handlePending(!vPending$.$invalid)">
-      <div class="field">
-        <label
-          for="password"
-          :class="{ 'p-error': vPending$.password.$invalid && submitted }"
-          >One Time Password
-        </label>
-        <InputText
-          id="password"
-          v-model="vPending$.password.$model"
-          type="password"
-          option-label="label"
-          name="password"
-          autofocus
-          class="w-full"
-        />
-        <Button
-          type="submit"
-          label="Activate Wallet"
-          class="w-full mt-3"
-          :loading="!!loadingRes || !!loadingToken"
-        />
-      </div>
-    </form>
+    <Status v-if="isPending" />
   </Dialog>
   <div v-if="activateWalletLoading" class="card flex justify-content-center">
     <ProgressSpinner />
@@ -136,6 +113,8 @@ import InputText from 'primevue/inputtext';
 import { useToast } from 'vue-toastification';
 import { required } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
+// Components
+import Status from './reservation/Status.vue';
 // State
 import { useReservationStore, useTokenStore, useTenantStore } from '@/store';
 import { storeToRefs } from 'pinia';
@@ -153,7 +132,6 @@ const {
   userEmail,
   userPass,
   wallets,
-  subscriptionKey,
   loading: loadingToken,
   token,
 } = storeToRefs(useTokenStore());
@@ -220,7 +198,7 @@ const handleActive = async (isFormValid: boolean) => {
     await tokenStore.login(
       activeFormFields.walletId,
       activeFormFields.walletSecret,
-      activeFormFields.subscriptionKey, 
+      activeFormFields.subscriptionKey
     );
     console.log(token.value);
   } catch (err) {

@@ -29,7 +29,7 @@ export const useReservationStore = defineStore('reservation', () => {
   const loadingWallets: any = ref(false);
   const error: any = ref(null);
   const reservation: any = shallowRef(null);
-  const reservationDetails: any = ref(null); // TODO: remove this and use v-for of reservations
+  const reservationDetails: any = ref(null);
   const reservationId: any = ref(''); // TODO: Verify this isn't the same as 'const reservation' in line above
   const reservationNames: any = ref(null);      // TODO: remove this and use v-for of reservations
   const status: Ref<string> = ref('');
@@ -214,6 +214,8 @@ export const useReservationStore = defineStore('reservation', () => {
     );
 
     reservationId.value = foundReservation.reservation_id;
+    reservationDetails.value = foundReservation;
+    console.log(reservationDetails.value);
   }
 
   async function getApprovedWallets(subscriptions: any) {
@@ -258,6 +260,7 @@ export const useReservationStore = defineStore('reservation', () => {
   return {
     reservation,
     reservationId,
+    reservationDetails,
     reservationNames,
     loading,
     loadingWallets,
