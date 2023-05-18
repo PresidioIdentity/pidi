@@ -119,12 +119,7 @@ const handleSubmit = async (isFormValid: boolean) => {
     return;
   }
   try {
-    await tokenStore.login(
-      formFields.walletId,
-      formFields.walletSecret,
-      subscriptionKey.value
-
-    );
+    await tokenStore.login(formFields.walletId, formFields.walletSecret);
     console.log(token.value);
   } catch (err) {
     console.error(err);

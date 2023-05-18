@@ -215,8 +215,7 @@ const handleActive = async (isFormValid: boolean) => {
   try {
     await tokenStore.login(
       activeFormFields.walletId,
-      activeFormFields.walletSecret,
-      activeFormFields.subscriptionKey
+      activeFormFields.walletSecret
     );
     console.log(token.value);
   } catch (err) {

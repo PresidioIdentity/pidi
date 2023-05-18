@@ -47,14 +47,13 @@
           />
 
           <Wallets />
-
         </div>
 
         <!-- Logging In -->
         <!-- <div v-if="loginMode === LOGIN_MODE.SIGNIN" class="py-6">
           <LoginForm />
           <div class="mt-6">
-            <!-- <p>
+             <p>
               Don't have an account?
               <a
                 href="#"
@@ -64,7 +63,7 @@
               >
             </p> -->
 
-            <p>
+        <!-- <p>
               First time logging in?
               <a
                 href="#"
@@ -158,7 +157,6 @@ enum LOGIN_MODE {
 // const loginMode = ref(LOGIN_MODE.SIGNIN);
 const loginMode = ref(LOGIN_MODE.APIM_LOGIN);
 // const loginMode = ref(LOGIN_MODE.WALLET_SELECT);
-
 
 const goBack = (event: any) => {
   if (status.value === RESERVATION_STATUSES.SHOW_WALLET) {
