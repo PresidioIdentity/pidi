@@ -17,6 +17,7 @@
 
           <div class="mt-6">
             <!-- <p>
+
               First time logging in?
               <a
                 href="#"
@@ -27,6 +28,7 @@
             </p> -->
             <p>
               Register and subscribe for access at our
+
               <a
                 href="https://pi-apim-development.developer.azure-api.net/"
                 class="p-button-link login-mode"
@@ -45,13 +47,14 @@
           />
 
           <Wallets />
+
         </div>
 
         <!-- Logging In -->
         <!-- <div v-if="loginMode === LOGIN_MODE.SIGNIN" class="py-6">
           <LoginForm />
           <div class="mt-6">
-            <p>
+            <!-- <p>
               Don't have an account?
               <a
                 href="#"
@@ -59,7 +62,7 @@
                 @click.prevent="loginMode = LOGIN_MODE.RESERVE"
                 >Create Request!</a
               >
-            </p>
+            </p> -->
 
             <p>
               First time logging in?
@@ -83,6 +86,7 @@
 
         <!-- Making Reservation -->
         <!-- <div v-else-if="loginMode === LOGIN_MODE.RESERVE" class="py-1">
+
           <Button
             label="Go Back to Sign-in"
             icon="pi pi-arrow-left"
@@ -125,6 +129,7 @@ import { useConfirm } from 'primevue/useconfirm';
 // Components
 import ApimLoginForm from '@/components/ApimLoginForm.vue';
 import Wallets from '@/components/Wallets.vue';
+
 import LoginForm from '@/components/LoginForm.vue';
 import Reserve from './reservation/Reserve.vue';
 import Status from './reservation/Status.vue';
@@ -153,6 +158,7 @@ enum LOGIN_MODE {
 // const loginMode = ref(LOGIN_MODE.SIGNIN);
 const loginMode = ref(LOGIN_MODE.APIM_LOGIN);
 // const loginMode = ref(LOGIN_MODE.WALLET_SELECT);
+
 
 const goBack = (event: any) => {
   if (status.value === RESERVATION_STATUSES.SHOW_WALLET) {

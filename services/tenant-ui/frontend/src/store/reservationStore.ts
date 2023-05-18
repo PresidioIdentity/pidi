@@ -16,7 +16,6 @@ export const useReservationStore = defineStore('reservation', () => {
     baseURL: config.value.frontend.tenantProxyPath,
     headers: {
       'Ocp-Apim-Subscription-Key': '0b7ba83125f44e71936e2bc3cd31b083',
-    }
   });
 
   // A different axios instance with a basepath just of the tenant UI backend
@@ -203,6 +202,7 @@ export const useReservationStore = defineStore('reservation', () => {
     reservationId.value = data.reservation_id;
     reservation.value = data.pending_reservations;
     reservationNames.value = tenantNames;
+
     status.value = RESERVATION_STATUSES.APPROVED;
     loading.value = false;
   }

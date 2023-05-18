@@ -101,10 +101,12 @@ const { tenant } = storeToRefs(useTenantStore());
 const formFields = reactive({
   walletId: '',
   walletSecret: '',
+  subscriptionKey: subscriptionKey,
 });
 const rules = {
   walletId: { required },
   walletSecret: { required },
+  subscriptionKey: { required },
 };
 const v$ = useVuelidate(rules, formFields);
 
@@ -121,6 +123,7 @@ const handleSubmit = async (isFormValid: boolean) => {
       formFields.walletId,
       formFields.walletSecret,
       subscriptionKey.value
+
     );
     console.log(token.value);
   } catch (err) {
@@ -138,6 +141,7 @@ const handleSubmit = async (isFormValid: boolean) => {
         JSON.stringify(formFields.subscriptionKey),
         { encrypt: true }
       );
+
       // TODO: once we get response statuses working correctly again can re-configure this
       // Don't throw errors since not-found and stuff is fine for non-issuers
       try {

@@ -49,6 +49,7 @@
         label="Sign In"
         :disabled="!!loadingToken || !!loadingReservation"
         :loading="!!loadingToken || !!loadingReservation"
+
       />
     </div>
   </form>
@@ -101,6 +102,7 @@ const props = defineProps<{
   select: Function;
 }>();
 
+
 // Form submission
 const submitted = ref(false);
 const handleSubmit = async (isFormValid: boolean) => {
@@ -114,7 +116,6 @@ const handleSubmit = async (isFormValid: boolean) => {
       formFields.email,
       formFields.password
     );
-
     await tokenStore.loginWithApim(
       formFields.email,
       formFields.password
@@ -123,6 +124,7 @@ const handleSubmit = async (isFormValid: boolean) => {
     await reservationStore.getApprovedWallets(wallets.value);
 
     props.select();
+
   } catch (err) {
     console.error(err);
     toast.error(`Failure getting subscription key: ${err}`);
