@@ -75,6 +75,9 @@ export const API_PATH = {
   MULTITENANCY_WALLET_TOKEN: (tenantId: string) =>
     `/multitenancy/wallet/${tenantId}/token`,
 
+  OCAS: '/oca',
+  OCA: (id: string) => `/oca/${id}`,
+
   REVOCATION_REVOKE: '/revocation/revoke',
 
   SCHEMAS: '/schemas',
@@ -89,7 +92,7 @@ export const API_PATH = {
   TENANT_SELF: '/tenant',
   TENANT_ENDORSER_CONNECTION: '/tenant/endorser-connection',
   TENANT_ENDORSER_INFO: '/tenant/endorser-info',
-  TENANT_REGISTER_PUBLIC_DID: '/tenant/register-public-did',
+  TENANT_REGISTER_PUBLIC_DID: '/ledger/register-nym',
   TENANT_TOKEN: '/tenant/token',
   TENANT_WALLET: '/tenant/wallet',
 
@@ -138,3 +141,5 @@ export const RESERVATION_STATUSES = {
   // Not API response but show on the FE when it 404s
   NOT_FOUND: 'not_found',
 };
+
+export const RESERVATION_STATUS_ROUTE = 'check-status';

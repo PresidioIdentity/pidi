@@ -1,11 +1,11 @@
 <template>
   <!-- Reservation lookup form -->
-  <form
+  <!-- <form
     v-if="status !== RESERVATION_STATUSES.SHOW_WALLET"
     @submit.prevent="handleSubmit(!$v.$invalid)"
-  >
+  > -->
     <!-- Email -->
-    <div class="field mt-5 w-full">
+    <!-- <div class="field mt-5 w-full">
       <label for="email" :class="{ 'p-error': $v.email.$invalid && submitted }"
         >Enter your Email addressed used to register with Presidio Identity 
       </label>
@@ -32,10 +32,10 @@
       <small v-else-if="$v.email.$invalid && submitted" class="p-error">{{
         $v.email.required.$message
       }}</small>
-    </div>
+    </div> -->
 
     <!-- Password -->
-    <div class="field mt-5 w-full">
+    <!-- <div class="field mt-5 w-full">
       <label
         for="password"
         :class="{ 'p-error': $v.password.$invalid && submitted }"
@@ -56,16 +56,12 @@
       <small v-if="$v.password.$invalid && submitted" class="p-error">{{
         $v.password.required.$message
       }}</small>
-    </div>
+    </div> -->
 
-    <Button type="submit" class="w-full my-2" label="Submit" />
-  </form>
+    <!-- <Button type="submit" class="w-full my-2" label="Submit" /> -->
+  <!-- </form> -->
 
-  <!-- Statuses to check -->
-  <div v-if="loading" class="flex justify-content-center">
-    <ProgressSpinner />
-  </div>
-  <div v-else>
+  <div>
     <Approved v-if="status === RESERVATION_STATUSES.APPROVED" />
     <CheckedIn v-else-if="status === RESERVATION_STATUSES.CHECKED_IN" />
     <Denied v-else-if="status === RESERVATION_STATUSES.DENIED" />
@@ -78,10 +74,10 @@
 <script setup lang="ts">
 // Vue
 import { ref, reactive } from 'vue';
+import { useRoute } from 'vue-router';
 // PrimeVue/Validation/etc
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
-import ProgressSpinner from 'primevue/progressspinner';
 import { useToast } from 'vue-toastification';
 import { email, required } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
@@ -96,6 +92,8 @@ import NotFound from './status/NotFound.vue';
 import Pending from './status/Pending.vue';
 import ShowWallet from './status/ShowWallet.vue';
 import { RESERVATION_STATUSES } from '@/helpers/constants';
+
+const route = useRoute();
 
 const toast = useToast();
 

@@ -18,9 +18,12 @@ import MyPresentations from '@/views/verification/MyPresentations.vue';
 import PresentationTemplates from '@/views/verification/PresentationTemplates.vue';
 // // Holder
 import MyHeldCredentials from '@/views/holder/MyHeldCredentials.vue';
-
 // Messages
 import MyMessages from '@/views/messages/MyMessages.vue';
+// OCA
+import Oca from '@/views/oca/Oca.vue';
+// Const
+import { RESERVATION_STATUS_ROUTE } from '@/helpers/constants';
 
 const tenantRoutes = [
   // Tenant Routes (base / is Tenant side for this app)
@@ -90,6 +93,11 @@ const tenantRoutes = [
         component: CredentialDefinitions,
       },
       {
+        path: 'oca',
+        name: 'OCA',
+        component: Oca,
+      },
+      {
         path: 'presentationTemplates',
         name: 'PresentationTemplates',
         component: PresentationTemplates,
@@ -143,6 +151,12 @@ const tenantRoutes = [
         ],
       },
     ],
+  },
+  // Direct back to the status checking page for reservations
+  {
+    path: `/${RESERVATION_STATUS_ROUTE}`,
+    name: 'TenantUiReservationStatus',
+    component: TenantUi,
   },
 ];
 

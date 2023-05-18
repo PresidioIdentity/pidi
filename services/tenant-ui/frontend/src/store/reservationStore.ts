@@ -1,9 +1,12 @@
-import { API_PATH } from '@/helpers/constants';
+import {
+  API_PATH,
+  RESERVATION_STATUSES,
+  RESERVATION_STATUS_ROUTE,
+} from '@/helpers/constants';
 import axios from 'axios';
 import { defineStore, storeToRefs } from 'pinia';
-import { ref, Ref } from 'vue';
+import { ref, Ref, shallowRef } from 'vue';
 import { useConfigStore } from './configStore';
-import { RESERVATION_STATUSES } from '@/helpers/constants';
 
 export const useReservationStore = defineStore('reservation', () => {
   const { config } = storeToRefs(useConfigStore());
@@ -12,8 +15,7 @@ export const useReservationStore = defineStore('reservation', () => {
   const api = axios.create({
     baseURL: config.value.frontend.tenantProxyPath,
     headers: {
-      "Ocp-Apim-Subscription-Key": "0b7ba83125f44e71936e2bc3cd31b083"
-    }
+      'Ocp-Apim-Subscription-Key': '0b7ba83125f44e71936e2bc3cd31b083',
   });
 
   // A different axios instance with a basepath just of the tenant UI backend
@@ -23,17 +25,22 @@ export const useReservationStore = defineStore('reservation', () => {
 
   // state
   const loading: any = ref(false);
+  const loadingWallets: any = ref(false);
   const error: any = ref(null);
-  const reservation: any = ref(null);
+  const reservation: any = shallowRef(null);
+  const reservationDetails: any = ref(null);
   const reservationId: any = ref(''); // TODO: Verify this isn't the same as 'const reservation' in line above
+  const reservationNames: any = ref(null);      // TODO: remove this and use v-for of reservations
   const status: Ref<string> = ref('');
+  const approvedWallets: any = ref(null);
+  const wallets: any = ref(null);
   const walletId: Ref<string> = ref('');
   const walletKey: Ref<string> = ref('');
 
   // actions
   function resetState() {
     reservation.value = null;
-    reservationId.value = '';
+    reservationDetails.value = '';
     status.value = '';
     walletId.value = '';
     walletKey.value = '';
@@ -66,13 +73,16 @@ export const useReservationStore = defineStore('reservation', () => {
       throw error.value;
     }
 
+    const trimUrl = window.location.origin;
+
     // Separately dispatch a non-blocking call to send the contact emails
     // If these fail we won't raise any error to the UI
     const emailPayload = {
       contactEmail: payload.contact_email,
       contactName: payload.contact_name,
       reservationId: reservation.value.reservation_id,
-      serverUrl: window.location.href,
+      serverUrl: trimUrl,
+      serverUrlStatusRoute: `${trimUrl}/${RESERVATION_STATUS_ROUTE}`,
     };
     backendApi
       .post(API_PATH.EMAIL_CONFIRMATION, emailPayload)
@@ -138,8 +148,8 @@ export const useReservationStore = defineStore('reservation', () => {
 
     // Request body
     const body = {
-        email: email,
-        password: password
+      email: email,
+      password: password,
     };
 
     // Make api call to authenticate with APIM and if auth'd get reservation id to then checkIn()
@@ -182,16 +192,43 @@ export const useReservationStore = defineStore('reservation', () => {
     console.log("response, data");
     console.log(response);
     console.log(data);
-    
+
+    // TODO: remove this and use v-for of reservations
+    const tenantNames = [];
+    for (let i = 0; i < data.pending_reservations.length; i++)
+      tenantNames.push(data.pending_reservations[i].tenant_name);
+
     // If we have a reservation ID, then reservation status is 'APPROVED'
     reservationId.value = data.reservation_id;
-    reservation.value = data.reservation_id;
+    reservation.value = data.pending_reservations;
+    reservationNames.value = tenantNames;
+
     status.value = RESERVATION_STATUSES.APPROVED;
     loading.value = false;
   }
 
+  async function getReservationDetails(reservationName: string) {
+    const reservations = reservation.value;
+    const foundReservation = reservations.find(
+      (r: any) => r.tenant_name === reservationName
+    );
+
+    reservationId.value = foundReservation.reservation_id;
+    reservationDetails.value = foundReservation;
+  }
+
+  async function getApprovedWallets(subscriptions: any) {
+    const approved = await subscriptions.filter((s: any) => {
+      return !reservation.value.some((r: any) => {
+        return s.displayName === r.tenant_name;
+      });
+    });
+    console.log(approved);
+    approvedWallets.value = approved;
+  }
+
   async function checkIn(reservationId: string, password: string) {
-    console.log('> reservationStore.checkIn');
+    console.log('> reservationStore.checkIn', reservationId);
     error.value = null;
     loading.value = true;
     await api
@@ -222,15 +259,22 @@ export const useReservationStore = defineStore('reservation', () => {
   return {
     reservation,
     reservationId,
+    reservationDetails,
+    reservationNames,
     loading,
+    loadingWallets,
     error,
     status,
+    approvedWallets,
+    wallets,
     walletId,
     walletKey,
     resetState,
-    makeReservation, // TODO: Remove
+    getApprovedWallets,
+    makeReservation, // TODO: Remove 
     authenticateAndGetReservationId,
     checkReservation, // TODO: Remove
+    getReservationDetails, // TODO: Remove
     checkIn, // TODO: Remove
   };
 });

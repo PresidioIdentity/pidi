@@ -43,7 +43,7 @@
     </div>
 
     <div class="field mt-5 w-full">
-      <!-- Secret -->
+      <!-- Key -->
       <label
         for="subscription-key"
         :class="{ 'p-error': v$.subscriptionKey.$invalid && submitted }"
@@ -85,6 +85,8 @@ import { useVuelidate } from '@vuelidate/core';
 // State
 import { useTenantStore, useTokenStore } from '../store';
 import { storeToRefs } from 'pinia';
+// Dependecies
+import ls from 'localstorage-slim';
 
 const toast = useToast();
 
@@ -120,7 +122,8 @@ const handleSubmit = async (isFormValid: boolean) => {
     await tokenStore.login(
       formFields.walletId,
       formFields.walletSecret,
-      subscriptionKey
+      subscriptionKey.value
+
     );
     console.log(token.value);
   } catch (err) {
@@ -132,6 +135,12 @@ const handleSubmit = async (isFormValid: boolean) => {
       // token is loaded, now go fetch the global data about the tenant
       await tenantStore.getSelf();
       console.log(tenant.value);
+
+      await ls.set(
+        'subcription_key',
+        JSON.stringify(formFields.subscriptionKey),
+        { encrypt: true }
+      );
 
       // TODO: once we get response statuses working correctly again can re-configure this
       // Don't throw errors since not-found and stuff is fine for non-issuers
