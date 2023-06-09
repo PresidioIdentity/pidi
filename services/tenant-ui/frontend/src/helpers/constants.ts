@@ -20,6 +20,12 @@ export const API_PATH = {
   BASICMESSAGES: '/basicmessages',
   BASICMESSAGES_SEND: (connId: string) => `/connections/${connId}/send-message`,
 
+  QUESTION_ANSWERS: '/qa',
+  QUESTION_ANSWER: (id: string) => `/qa/${id}`,
+  QUESTION_ANSWER_SEND_QUESTION: (id: string) => `/qa/${id}/send-question`,
+  QUESTION_ANSWER_GET_QUESTIONS: '/qa/get-questions',
+  QUESTION_ANSWER_SEND_ANSWER: (id: string) => `/qa/${id}/send-answer`,
+
   CONNECTIONS: '/connections',
   CONNECTION: (id: string) => `/connections/${id}`,
   CONNECTIONS_CREATE_INVITATION: '/connections/create-invitation',
