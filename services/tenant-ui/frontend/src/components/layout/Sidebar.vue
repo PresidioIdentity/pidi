@@ -29,6 +29,17 @@ const noSubItems = ref([
     to: { name: 'Dashboard' },
   },
   {
+    label: () => t('trust.trust'),
+    icon: 'pi pi-fw pi-shield',
+    items: [
+      {
+        label: 'Policy',
+        icon: 'pi pi-fw pi-book',
+        to: { name: 'TrustPolicy' },
+      },
+    ],
+  },
+  {
     label: () => t('about.about'),
     icon: 'pi pi-fw pi-question-circle',
     to: { name: 'About' },

@@ -85,6 +85,10 @@
       "reasonText": "Reason for Denial (Optional)"
     }
   },
+  "trust": {
+    "trust": "Trust <FR>",
+    "policy": "Policy <FR>"
+  },
   "about": {
     "about": "About <FR>",
     "traction": {

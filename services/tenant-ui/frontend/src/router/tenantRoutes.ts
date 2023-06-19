@@ -22,6 +22,8 @@ import MyHeldCredentials from '@/views/holder/MyHeldCredentials.vue';
 import MyMessages from '@/views/messages/MyMessages.vue';
 // OCA
 import Oca from '@/views/oca/Oca.vue';
+// Trust
+import TrustPolicy from '@/views/trust/TrustPolicy.vue';
 // Const
 import { RESERVATION_STATUS_ROUTE } from '@/helpers/constants';
 
@@ -40,6 +42,18 @@ const tenantRoutes = [
         path: '/about',
         name: 'About',
         component: About,
+      },
+
+      // Trust
+      {
+        path: '/trust',
+        children: [
+          {
+            path: 'policy',
+            name: 'TrustPolicy',
+            component: TrustPolicy,
+          },
+        ],
       },
 
       // Tenant - Setup etc
