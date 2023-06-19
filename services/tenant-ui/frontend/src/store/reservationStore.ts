@@ -16,7 +16,7 @@ export const useReservationStore = defineStore('reservation', () => {
     baseURL: config.value.frontend.tenantProxyPath,
     headers: {
       'Ocp-Apim-Subscription-Key': '0b7ba83125f44e71936e2bc3cd31b083',
-    }
+    },
   });
 
   // A different axios instance with a basepath just of the tenant UI backend
@@ -31,7 +31,7 @@ export const useReservationStore = defineStore('reservation', () => {
   const reservation: any = shallowRef(null);
   const reservationDetails: any = ref(null);
   const reservationId: any = ref(''); // TODO: Verify this isn't the same as 'const reservation' in line above
-  const reservationNames: any = ref(null);      // TODO: remove this and use v-for of reservations
+  const reservationNames: any = ref(null); // TODO: remove this and use v-for of reservations
   const status: Ref<string> = ref('');
   const approvedWallets: any = ref(null);
   const wallets: any = ref(null);
@@ -142,7 +142,10 @@ export const useReservationStore = defineStore('reservation', () => {
     return status.value;
   }
 
-  async function authenticateAndGetReservationId(email: string, password: string) {
+  async function authenticateAndGetReservationId(
+    email: string,
+    password: string
+  ) {
     console.log('> reservationStore.authenticateAndGetReservationId');
     error.value = null;
     loading.value = true;
@@ -157,40 +160,41 @@ export const useReservationStore = defineStore('reservation', () => {
     // TODO: Review if we want to make this api call separate Azure func or an aca-py plugin
     // TODO: Refactor to use axios, as in all other api calls in this project
     const response = await fetch(
-        // TODO: Move api url to env var
-        "https://pidi-monetization-newsub-webhook-handler.azurewebsites.net/api/authenticateNewPidiWallet?",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Cache-Control": "no-cache",
-                "Ocp-Apim-Subscription-Key": "0b7ba83125f44e71936e2bc3cd31b083",
-            },
-            body: JSON.stringify(body),
-        }
+      // TODO: Move api url to env var
+      'https://pidi-monetization-newsub-webhook-handler.azurewebsites.net/api/authenticateNewPidiWallet?',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+          'Ocp-Apim-Subscription-Key': '0b7ba83125f44e71936e2bc3cd31b083',
+        },
+        body: JSON.stringify(body),
+      }
     );
 
-    if(response.status === 401) {
-      error.value = "Authentication failed. Check your username and password.";
+    if (response.status === 401) {
+      error.value = 'Authentication failed. Check your username and password.';
       loading.value = false;
       throw error.value;
     }
 
-    if(response.status === 204) {
-      error.value = "New wallet subscription not found";
+    if (response.status === 204) {
+      error.value = 'New wallet subscription not found';
       loading.value = false;
       throw error.value;
     }
 
-    if(response.status === 500) {
-      error.value = "An error occurred. Please contact info@presidioidentity.com and let them know what happened.";
+    if (response.status === 500) {
+      error.value =
+        'An error occurred. Please contact info@presidioidentity.com and let them know what happened.';
       loading.value = false;
       throw error.value;
     }
 
     const data = await response.json();
 
-    console.log("response, data");
+    console.log('response, data');
     console.log(response);
     console.log(data);
 
@@ -272,7 +276,7 @@ export const useReservationStore = defineStore('reservation', () => {
     walletKey,
     resetState,
     getApprovedWallets,
-    makeReservation, // TODO: Remove 
+    makeReservation, // TODO: Remove
     authenticateAndGetReservationId,
     checkReservation, // TODO: Remove
     getReservationDetails, // TODO: Remove
