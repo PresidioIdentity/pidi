@@ -2,9 +2,7 @@
   <form @submit.prevent="handleSubmit(!v$.$invalid)">
     <div class="field mt-5 w-full">
       <!-- ID -->
-      <label
-        for="email"
-        :class="{ 'p-error': v$.email.$invalid && submitted }"
+      <label for="email" :class="{ 'p-error': v$.email.$invalid && submitted }"
         >Email
       </label>
       <InputText
@@ -49,7 +47,6 @@
         label="Sign In"
         :disabled="!!loadingToken || !!loadingReservation"
         :loading="!!loadingToken || !!loadingReservation"
-
       />
     </div>
   </form>
@@ -73,11 +70,11 @@ const toast = useToast();
 // Login Form and validation
 const formFields = reactive({
   email: '',
-  password: ''
+  password: '',
 });
 const rules = {
   email: { required },
-  password: { required }
+  password: { required },
 };
 const v$ = useVuelidate(rules, formFields);
 
@@ -91,17 +88,16 @@ const {
   subscriptionKey,
   wallets,
 } = storeToRefs(useTokenStore());
-const tenantStore = useTenantStore();
-const { tenant } = storeToRefs(useTenantStore());
-const { reservationId, loading: loadingReservation } = storeToRefs(
-  useReservationStore()
-);
+const {
+  reservationId,
+  loading: loadingReservation,
+  isAPIMUser,
+} = storeToRefs(useReservationStore());
 
 // Props
 const props = defineProps<{
   select: Function;
 }>();
-
 
 // Form submission
 const submitted = ref(false);
@@ -116,15 +112,14 @@ const handleSubmit = async (isFormValid: boolean) => {
       formFields.email,
       formFields.password
     );
-    await tokenStore.loginWithApim(
-      formFields.email,
-      formFields.password
-    );
+    // User is an APIM user but doens't have a reservation/pidi subscription key
+    if (isAPIMUser.value) return;
+
+    await tokenStore.loginWithApim(formFields.email, formFields.password);
 
     await reservationStore.getApprovedWallets(wallets.value);
 
     props.select();
-
   } catch (err) {
     console.error(err);
     toast.error(`Failure getting subscription key: ${err}`);

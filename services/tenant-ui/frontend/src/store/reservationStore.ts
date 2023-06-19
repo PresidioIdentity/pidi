@@ -28,6 +28,7 @@ export const useReservationStore = defineStore('reservation', () => {
   const loading: any = ref(false);
   const loadingWallets: any = ref(false);
   const error: any = ref(null);
+  const isAPIMUser: any = ref(null);
   const reservation: any = shallowRef(null);
   const reservationDetails: any = ref(null);
   const reservationId: any = ref(''); // TODO: Verify this isn't the same as 'const reservation' in line above
@@ -194,9 +195,10 @@ export const useReservationStore = defineStore('reservation', () => {
 
     const data = await response.json();
 
-    console.log('response, data');
-    console.log(response);
-    console.log(data);
+    if (data.pending_reservations.length === 0) {
+      isAPIMUser.value = true;
+      loading.value = false;
+    }
 
     // TODO: remove this and use v-for of reservations
     const tenantNames = [];
@@ -262,6 +264,7 @@ export const useReservationStore = defineStore('reservation', () => {
   }
 
   return {
+    isAPIMUser,
     reservation,
     reservationId,
     reservationDetails,

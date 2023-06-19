@@ -95,10 +95,7 @@ export const useTokenStore = defineStore('token', () => {
     loading.value = false;
   }
 
-  async function login(
-    username: string,
-    password: string,
-  ) {
+  async function login(username: string, password: string) {
     console.log('> tokenStore.load');
     const payload = {
       wallet_key: password,

@@ -20,17 +20,17 @@ export const useTenantStore = defineStore('tenant', () => {
   const tenantWallet: any = ref(null);
 
   const { token } = storeToRefs(useTokenStore());
-  const { wallets } = storeToRefs(useReservationStore());
+  const { isAPIMUser, loading: reservationLoading } = storeToRefs(
+    useReservationStore()
+  );
 
   const acapyApi = useAcapyApi();
 
   // getters
   const tenantReady = computed(() => {
-    return token.value != null;
-  });
-
-  const hasWallet = computed(() => {
-    return wallets.value != null && wallets.value.length > 0;
+    return (
+      token.value != null || (isAPIMUser.value && !reservationLoading.value)
+    );
   });
 
   const isIssuer = computed(() => {
