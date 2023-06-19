@@ -1,11 +1,11 @@
 <template>
   <div class="traction-sidebar">
-    <h1 class="sidebar-app-title">
+    <h1 v-if="tenant" class="sidebar-app-title">
       <ProgressSpinner v-if="loading" />
-      <span v-if="tenant">{{ tenant.tenant_name }}</span>
+      <span>{{ tenant.tenant_name }}</span>
     </h1>
     <h1 class="sidebar-app-title small">PI</h1>
-    <PanelMenu :model="items" class="mt-5" />
+    <PanelMenu :model="!tenant ? noSubItems : items" class="mt-5" />
   </div>
 </template>
 
@@ -21,6 +21,19 @@ const { t } = useI18n();
 
 // tenant should be loaded by login...
 const { tenant, loading } = storeToRefs(useTenantStore());
+
+const noSubItems = ref([
+  {
+    label: () => t('home.dashboard'),
+    icon: 'pi pi-fw pi-chart-bar',
+    to: { name: 'Dashboard' },
+  },
+  {
+    label: () => t('about.about'),
+    icon: 'pi pi-fw pi-question-circle',
+    to: { name: 'About' },
+  },
+]);
 
 const items = ref([
   {
