@@ -164,7 +164,7 @@
 
         <!-- Submit Button -->
         <div class="flex flex-row align-items-center mt-5">
-          <Button label="Submit Changes" class="w-6" />
+          <Button label="Submit Changes" disabled class="w-6" />
         </div>
       </div>
     </div>
