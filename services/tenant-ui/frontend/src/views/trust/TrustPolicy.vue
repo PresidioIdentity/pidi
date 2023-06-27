@@ -165,7 +165,12 @@
 
           <!-- Submit Button -->
           <div class="flex flex-row align-items-center mt-5">
-            <Button type="submit" label="Submit Changes" class="w-6" />
+            <Button
+              type="submit"
+              label="Submit Changes"
+              class="w-6"
+              :loading="!!loading"
+            />
           </div>
         </div>
       </div>
@@ -175,7 +180,7 @@
 
 <script setup lang="ts">
 // Vue
-import { ref, reactive, watch } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 // PrimeVue/Validation/etc
 import Checkbox from 'primevue/checkbox';
 import InputText from 'primevue/inputtext';
@@ -198,6 +203,8 @@ const {
   ipAddress,
   macAddress,
   location,
+  loading,
+  error,
 } = storeToRefs(useTrustStore());
 const trustStore = useTrustStore();
 
@@ -274,6 +281,7 @@ const handleSubmit = async (isFormValid: boolean) => {
       location: Number(trustWeights.location),
     });
     await trustStore.submitTrustModel();
+    if (!error.value) toast.success('Trust Model Updated');
   } catch (err) {
     console.error(err);
     toast.error(`Failure getting subscription key: ${err}`);

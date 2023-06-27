@@ -12,6 +12,9 @@ interface TrustWeights {
 
 export const useTrustStore = defineStore('trust', () => {
   // state
+  const loading: any = ref(false);
+  const error: any = ref(null);
+
   // Hardware values
   const deviceId: any = ref(false);
   const deviceIdWeight: any = ref(100);
@@ -31,6 +34,10 @@ export const useTrustStore = defineStore('trust', () => {
   const trustWeightArray: any = ref([]);
 
   // actions
+  async function loadTrustProfiles() {
+    console.log('> trustStore.getTrustWeight');
+  }
+
   async function setTrustWeights(weights: TrustWeights) {
     console.log('> trustStore.setTrustWeight');
     // Hardware values
@@ -108,16 +115,33 @@ export const useTrustStore = defineStore('trust', () => {
 
   async function submitTrustModel() {
     console.log('> trustStore.sumbitTrustModel');
+    loading.value = true;
 
     await generateTrustObject();
     const data = { weights: trustWeightArray.value };
     await fetch('https://pi-trust-function-app.azurewebsites.net/api/trust/', {
       method: 'POST',
       body: JSON.stringify(data),
-    });
+    })
+      .then(async (response) => {
+        const res = await response.json();
+        localStorage.setItem('trustScore', res);
+        loading.value = false;
+      })
+      .catch((error) => {
+        console.log(error);
+        loading.value = false;
+        throw error.value;
+      });
   }
 
+  // TODO: (GET) if user has trust score get values and set as the default
+  // TODO: (PUT) if user has trust score update values
+  // TODO: (DELETE) user wants to reset their trust values
+
   return {
+    loading,
+    error,
     deviceId,
     deviceIdWeight,
     deviceName,
@@ -130,6 +154,7 @@ export const useTrustStore = defineStore('trust', () => {
     macAddressWeight,
     location,
     locationWeight,
+    loadTrustProfiles,
     setTrustWeights,
     submitTrustModel,
   };
