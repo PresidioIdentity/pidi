@@ -2,11 +2,8 @@ import { defineStore, storeToRefs } from 'pinia';
 import { ref } from 'vue';
 
 interface TrustWeights {
-  deviceId: number;
-  deviceName: number;
-  operatingSystem: number;
-  ipAddress: number;
-  macAddress: number;
+  deviceInfo: number;
+  network: number;
   location: number;
 }
 
@@ -15,19 +12,13 @@ export const useTrustStore = defineStore('trust', () => {
   const loading: any = ref(false);
   const error: any = ref(null);
 
-  // Hardware values
-  const deviceId: any = ref(false);
-  const deviceIdWeight: any = ref(100);
-  const deviceName: any = ref(false);
-  const deviceNameWeight: any = ref(100);
-  const operatingSystem: any = ref(false);
-  const operatingSystemWeight: any = ref(100);
+  // DeviceInfo values
+  const deviceInfo: any = ref(false);
+  const deviceInfoWeight: any = ref(100);
   // Network values
-  const ipAddress: any = ref(false);
-  const ipAddressWeight: any = ref(100);
-  const macAddress: any = ref(false);
-  const macAddressWeight: any = ref(100);
-  // Jurisdicton values
+  const network: any = ref(false);
+  const networkWeight: any = ref(100);
+  // Location values
   const location: any = ref(false);
   const locationWeight: any = ref(100);
 
@@ -40,76 +31,41 @@ export const useTrustStore = defineStore('trust', () => {
 
   async function setTrustWeights(weights: TrustWeights) {
     console.log('> trustStore.setTrustWeight');
-    // Hardware values
-    deviceIdWeight.value = (weights.deviceId * 0.01).toString();
-    deviceNameWeight.value = (weights.deviceName * 0.01).toString();
-    operatingSystemWeight.value = (weights.operatingSystem * 0.01).toString();
-    // Network values
-    ipAddressWeight.value = (weights.ipAddress * 0.01).toString();
-    macAddressWeight.value = (weights.macAddress * 0.01).toString();
-    // Jurisdicton values
+
+    deviceInfoWeight.value = (weights.deviceInfo * 0.01).toString();
+    networkWeight.value = (weights.network * 0.01).toString();
     locationWeight.value = (weights.location * 0.01).toString();
   }
 
   async function generateTrustObject() {
     console.log('> trustStore.generateTrustObject');
-    const attributes: any = {
-      attributeName: '',
-      weight: '',
-      evalMethod: '',
-    };
-    // Hardware values
-    if (deviceId.value == true) {
+
+    // DeviceInfo
+    if (deviceInfo.value == true) {
       const attributes: object = {
-        attributeName: 'Device ID',
-        weight: deviceIdWeight.value,
+        attributeName: 'Device Info',
+        weight: deviceInfoWeight.value,
         evalMethod: 'Exact',
       };
       trustWeightArray.value.push(attributes);
     }
-    if (deviceName.value == true) {
+    // Network
+    if (network.value == true) {
       const attributes: object = {
-        attributeName: 'Device Name',
-        weight: deviceNameWeight.value,
+        attributeName: 'Network Info',
+        weight: networkWeight.value,
         evalMethod: 'Exact',
       };
       trustWeightArray.value.push(attributes);
     }
-    if (operatingSystem.value == true) {
-      const attributes: object = {
-        attributeName: 'Operating System',
-        weight: operatingSystemWeight.value,
-        evalMethod: 'Exact',
-      };
-      trustWeightArray.value.push(attributes);
-    }
-    // Network values
-    if (ipAddress.value == true) {
-      const attributes: object = {
-        attributeName: 'IP Address',
-        weight: ipAddressWeight.value,
-        evalMethod: 'Exact',
-      };
-      trustWeightArray.value.push(attributes);
-    }
-    if (macAddress.value == true) {
-      const attributes: object = {
-        attributeName: 'MAC Address',
-        weight: ipAddressWeight.value,
-        evalMethod: 'Exact',
-      };
-      trustWeightArray.value.push(attributes);
-    }
-    // Jurisdicton values
+    // Location
     if (location.value == true) {
       const attributes: object = {
-        attributeName: 'Location',
+        attributeName: 'Location Info',
         weight: locationWeight.value,
-        evalMethod: '',
       };
       trustWeightArray.value.push(attributes);
     }
-    console.log(trustWeightArray.value);
     return trustWeightArray.value;
   }
 
@@ -142,18 +98,9 @@ export const useTrustStore = defineStore('trust', () => {
   return {
     loading,
     error,
-    deviceId,
-    deviceIdWeight,
-    deviceName,
-    deviceNameWeight,
-    operatingSystem,
-    operatingSystemWeight,
-    ipAddress,
-    ipAddressWeight,
-    macAddress,
-    macAddressWeight,
+    deviceInfo,
+    network,
     location,
-    locationWeight,
     loadTrustProfiles,
     setTrustWeights,
     submitTrustModel,
