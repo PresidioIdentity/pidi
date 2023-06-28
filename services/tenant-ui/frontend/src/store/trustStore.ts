@@ -14,13 +14,13 @@ export const useTrustStore = defineStore('trust', () => {
 
   // DeviceInfo values
   const deviceInfo: any = ref(false);
-  const deviceInfoWeight: any = ref(100);
+  const deviceInfoWeight: any = ref(null);
   // Network values
   const network: any = ref(false);
-  const networkWeight: any = ref(100);
+  const networkWeight: any = ref(null);
   // Location values
   const location: any = ref(false);
-  const locationWeight: any = ref(100);
+  const locationWeight: any = ref(null);
 
   const trustWeightArray: any = ref([]);
 

@@ -4,7 +4,7 @@
     <form @submit.prevent="handleSubmit(!v$.$invalid)">
       <div class="mb-3">
         <div class="h-8rem">
-          <!-- Hardware -->
+          <!-- Device Info -->
           <div class="flex flex-row align-items-center">
             <Checkbox
               v-model="deviceInfo"
@@ -28,6 +28,12 @@
             }}</small>
           </div>
         </div>
+        <!-- Hardware Tracked Attributes -->
+        <Accordion class="w-6">
+          <AccordionTab header="Tracked Attributes">
+            <h1>Device Info Tracked Attributes</h1>
+          </AccordionTab>
+        </Accordion>
       </div>
       <!-- Network -->
       <div class="mb-3">
@@ -55,6 +61,12 @@
             }}</small>
           </div>
         </div>
+        <!-- Network Tracked Attributes -->
+        <Accordion class="w-6">
+          <AccordionTab header="Tracked Attributes">
+            <h1>Network Tracked Attributes</h1>
+          </AccordionTab>
+        </Accordion>
       </div>
       <!-- Location -->
       <div class="mb-3">
@@ -82,6 +94,12 @@
             }}</small>
           </div>
         </div>
+        <!-- Location Tracked Attributes -->
+        <Accordion class="w-6">
+          <AccordionTab header="Tracked Attributes">
+            <h1>Location Tracked Attributes</h1>
+          </AccordionTab>
+        </Accordion>
       </div>
       <div class="flex flex-row align-items-center mt-5 mb-5">
         <Button
@@ -102,6 +120,8 @@ import { ref, reactive, watch } from 'vue';
 import Checkbox from 'primevue/checkbox';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
+import Accordion from 'primevue/accordion';
+import AccordionTab from 'primevue/accordiontab';
 import { useToast } from 'vue-toastification';
 import { helpers } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
@@ -119,9 +139,9 @@ const { deviceInfo, network, location, loading, error } = storeToRefs(
 const trustStore = useTrustStore();
 
 const trustWeights = reactive({
-  deviceInfo: '100',
-  network: '100',
-  location: '100',
+  deviceInfo: '',
+  network: '',
+  location: '',
 });
 
 watch(trustWeights, (newValue, oldValue) => {
