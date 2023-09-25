@@ -13,9 +13,14 @@ export const login = async () => {
   const loginUrl = `${TRACURL}/multitenancy/tenant/${INN_USER}/token`;
   const payload = { wallet_key: INN_PW };
   const res = await axios({
-    method: "post",
-    url: loginUrl,
-    data: payload,
+      method: "post",
+      url: loginUrl,
+      data: payload,
+      headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Ocp-Apim-Subscription-Key": "0facb0bea0694f998ea68516ee14805e",
+      },
   });
 
   return res.data;

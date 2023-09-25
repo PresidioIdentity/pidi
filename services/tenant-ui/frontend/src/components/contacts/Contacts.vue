@@ -56,6 +56,7 @@
           @click="deleteContact($event, data.connection_id)"
         />
         <EditContact :connection-id="data.connection_id" />
+        <QueryContact :connection-id="data.connection_id" />
       </template>
     </Column>
     <Column :sortable="true" field="alias" header="Alias" />
@@ -95,6 +96,7 @@ import AcceptInvitation from './acceptInvitation/AcceptInvitation.vue';
 // import AcceptInvitation from './acceptInvitation/AcceptInvitation.vue';
 import DidExchange from './didExchange/DidExchange.vue';
 import EditContact from './editContact/EditContact.vue';
+import QueryContact from './queryContact/QueryContact.vue';
 import MessageContact from './messageContact/MessageContact.vue';
 import RowExpandData from '../common/RowExpandData.vue';
 import StatusChip from '../common/StatusChip.vue';

@@ -20,6 +20,12 @@ export const API_PATH = {
   BASICMESSAGES: '/basicmessages',
   BASICMESSAGES_SEND: (connId: string) => `/connections/${connId}/send-message`,
 
+  QUESTION_ANSWERS: '/qa',
+  QUESTION_ANSWER: (id: string) => `/qa/${id}`,
+  QUESTION_ANSWER_SEND_QUESTION: (id: string) => `/qa/${id}/send-question`,
+  QUESTION_ANSWER_GET_QUESTIONS: '/qa/get-questions',
+  QUESTION_ANSWER_SEND_ANSWER: (id: string) => `/qa/${id}/send-answer`,
+
   CONNECTIONS: '/connections',
   CONNECTION: (id: string) => `/connections/${id}`,
   CONNECTIONS_CREATE_INVITATION: '/connections/create-invitation',
@@ -77,6 +83,22 @@ export const API_PATH = {
 
   OCAS: '/oca',
   OCA: (id: string) => `/oca/${id}`,
+
+  PRESENT_PROOF_CREATE_REQUEST: '/present-proof/create-request',
+  PRESENT_PROOF_RECORDS: '/present-proof/records',
+  PRESENT_PROOF_RECORD: (id: string) => `/present-proof/records/${id}`,
+  PRESENT_PROOF_RECORD_CREDENTIALS: (id: string) =>
+    `/present-proof/records/${id}/credentials`,
+  PRESENT_PROOF_RECORD_PROBLEM: (id: string) =>
+    `/present-proof/records/${id}/problem-report`,
+  PRESENT_PROOF_RECORD_SEND_PRESENTATION: (id: string) =>
+    `/present-proof/records/${id}/send-presentation`,
+  PRESENT_PROOF_RECORD_SEND_REQUEST: (id: string) =>
+    `/present-proof/records/${id}/send-request`,
+  PRESENT_PROOF_RECORD_VERIFY: (id: string) =>
+    `/present-proof/records/${id}/verify-presentation`,
+  PRESENT_PROOF_SEND_PROPOSAL: '/present-proof/send-proposal',
+  PRESENT_PROOF_SEND_REQUEST: '/present-proof/send-request',
 
   REVOCATION_REVOKE: '/revocation/revoke',
 
@@ -143,3 +165,13 @@ export const RESERVATION_STATUSES = {
 };
 
 export const RESERVATION_STATUS_ROUTE = 'check-status';
+
+// json editor config
+export const JSON_EDITOR_DEFAULTS = {
+  mainMenuBar: false,
+  mode: 'text' as any,
+  statusBar: false,
+  navigationBar: false,
+  indentation: 2,
+  tabSize: 2,
+};

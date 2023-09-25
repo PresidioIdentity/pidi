@@ -1,64 +1,89 @@
 <template>
   <!-- Approved and ready to get wallet details with PW -->
-  <Card class="info-card mt-4 mb-6">
-    <template #title>
+  <!-- <template #title>
       <i class="pi pi-thumbs-up info-card-icon"></i> <br />
       APPROVED!
-    </template>
-    <template #content>
-      <p>
-        We have sent a Reservation Password to your email address on
+    </template> -->
+  <div>
+    <!-- <p>
+        We sent a reservation password to your email address on
         {{ formatDateLong(reservation.updated_at) }}.
-      </p>
-      <p>
-        Please enter the Reservation Password below to validate your account.
-      </p>
-
-      <form @submit.prevent="handleSubmit(!v$.$invalid)">
-        <div class="field">
-          <Password
-            v-model="v$.password.$model"
+      </p> -->
+    <p>Please enter the one time password below to validate your account.</p>
+    <form @submit.prevent="handleSubmit(!v$.$invalid)">
+      <div class="field">
+        <!-- <Dropdown
+            v-model="v$.reservation.$model"
             class="w-full"
             input-class="w-full"
-            toggle-mask
-            :feedback="false"
-            placeholder="Password"
-          />
-          <small v-if="v$.password.$invalid && submitted" class="p-error">
-            {{ v$.password.required.$message }}
-          </small>
-          <Button
-            type="submit"
-            label="Validate"
-            class="w-full mt-3"
-            :loading="loading"
-          />
-          <Message v-if="showError" severity="error" :closable="false">
-            {{ errorMessage }}
-          </Message>
-        </div>
-      </form>
-      <p>
-        The Reservation Password is only valid for 48 hours from the time it was
-        sent to your email address.
-      </p>
-    </template>
-    <template #footer>
-      <hr />
-      (Please check your junk/spam folder before contacting us, as it is very
-      common to have the email delivery problems because of automated filters.)
-    </template>
-  </Card>
+            placeholder="Select a Subscription"
+            :options="reservationStore.reservationNames"
+            @change="handleReservationDetails(formFields.reservation)"
+          /> -->
+        <label
+          for="subscription_name"
+          :class="{ 'p-error': v$.reservation.$invalid && submitted }"
+          >Subscription
+        </label>
+        <InputText
+          id="subscription_name"
+          v-model="v$.reservation.$model"
+          type="text"
+          name="subscription_name"
+          disabled="true"
+          class="w-full mb-3"
+        />
+
+        <label
+          for="password"
+          :class="{ 'p-error': v$.password.$invalid && submitted }"
+          >Password
+        </label>
+        <Password
+          v-model="v$.password.$model"
+          class="w-full"
+          input-class="w-full"
+          toggle-mask
+          :feedback="false"
+          placeholder="One Time Password"
+        />
+        <small v-if="v$.password.$invalid && submitted" class="p-error">
+          {{ v$.password.required.$message }}
+        </small>
+        <Button
+          type="submit"
+          label="Activate"
+          class="w-full mt-3"
+          :loading="loading"
+        />
+        <Message v-if="showError" severity="error" :closable="false">
+          {{ errorMessage }}
+        </Message>
+      </div>
+    </form>
+    <p>
+      The one time password is only valid for 48 hours from the time it was sent
+      to your email address.
+    </p>
+  </div>
+  <div>
+    <Divider />
+    (Please check your junk/spam folder before contacting us, as it is very
+    common to have the email delivery problems because of automated filters.)
+  </div>
 </template>
 
 <script setup lang="ts">
 // Vue
 import { reactive, ref } from 'vue';
 // PrimeVue/Validation/etc
+import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
-import Card from 'primevue/card';
+// import Card from 'primevue/card';
+import Divider from 'primevue/divider';
 import Message from 'primevue/message';
 import Password from 'primevue/password';
+// import Dropdown from 'primevue/dropdown';
 import { required } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
 import { useToast } from 'vue-toastification';
@@ -71,17 +96,19 @@ import { storeToRefs } from 'pinia';
 const toast = useToast();
 
 const reservationStore = useReservationStore();
-const { reservation } = storeToRefs(useReservationStore());
+const { reservationDetails } = storeToRefs(useReservationStore());
 
 const showError = ref(false);
-
 const errorMessage = ref('An error occurred'); // Default error message
+
 
 // Validation
 const formFields = reactive({
+  reservation: reservationDetails.value.tenant_name,
   password: '',
 });
 const rules = {
+  reservation: { required },
   password: { required },
 };
 
@@ -101,7 +128,7 @@ const handleSubmit = async (isFormValid: boolean) => {
 
   try {
     await reservationStore.checkIn(
-      reservation.value.reservation_id,
+      reservationDetails.value.reservation_id,
       formFields.password
     );
   } catch (error: any) {

@@ -11,12 +11,15 @@
     "lintfix": "eslint --fix --ext .ts,vue ."
   },
   "dependencies": {
-    "@vuelidate/core": "^2.0.1",
-    "@vuelidate/validators": "^2.0.1",
+    "@types/crypto-js": "^4.1.1",
+    "@vuelidate/core": "^2.0.0",
+    "@vuelidate/validators": "^2.0.0",
     "axios": "^1.3.4",
+    "crypto-js": "^4.1.1",
     "date-fns": "^2.29.3",
-    "json-editor-vue": "^0.10.5",
+    "json-editor-vue": "^0.10.6",
     "jwt-decode": "^3.1.2",
+    "localstorage-slim": "^2.4.0",
     "oidc-client-ts": "^2.2.2",
     "pinia": "^2.0.33",
     "primeflex": "^3.3.0",

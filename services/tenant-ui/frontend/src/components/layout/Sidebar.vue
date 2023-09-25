@@ -4,7 +4,7 @@
       <ProgressSpinner v-if="loading" />
       <span v-if="tenant">{{ tenant.tenant_name }}</span>
     </h1>
-    <h1 class="sidebar-app-title small">T</h1>
+    <h1 class="sidebar-app-title small">PI</h1>
     <PanelMenu :model="items" class="mt-5" />
   </div>
 </template>
@@ -52,11 +52,11 @@ const items = ref([
     to: { name: 'MyIssuedCredentials' },
   },
 
-  // {
-  //   label: () => t('verify.verification'),
-  //   icon: 'pi pi-fw pi-check-square',
-  //   to: { name: 'MyPresentations' },
-  // },
+  {
+    label: () => t('verify.verification'),
+    icon: 'pi pi-fw pi-check-square',
+    to: { name: 'MyPresentations' },
+  },
 
   {
     label: () => t('holder.credentials'),

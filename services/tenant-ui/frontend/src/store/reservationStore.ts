@@ -5,7 +5,7 @@ import {
 } from '@/helpers/constants';
 import axios from 'axios';
 import { defineStore, storeToRefs } from 'pinia';
-import { ref, Ref } from 'vue';
+import { ref, Ref, shallowRef } from 'vue';
 import { useConfigStore } from './configStore';
 
 export const useReservationStore = defineStore('reservation', () => {
@@ -14,6 +14,9 @@ export const useReservationStore = defineStore('reservation', () => {
   // Needed for the open call to reservation at this point
   const api = axios.create({
     baseURL: config.value.frontend.tenantProxyPath,
+    headers: {
+      'Ocp-Apim-Subscription-Key': '0facb0bea0694f998ea68516ee14805e',
+    }
   });
 
   // A different axios instance with a basepath just of the tenant UI backend
@@ -23,20 +26,28 @@ export const useReservationStore = defineStore('reservation', () => {
 
   // state
   const loading: any = ref(false);
+  const loadingWallets: any = ref(false);
   const error: any = ref(null);
-  const reservation: any = ref(null);
+  const reservation: any = shallowRef(null);
+  const reservationDetails: any = ref(null);
+  const reservationId: any = ref(''); // TODO: Verify this isn't the same as 'const reservation' in line above
+  const reservationNames: any = ref(null);      // TODO: remove this and use v-for of reservations
   const status: Ref<string> = ref('');
+  const approvedWallets: any = ref(null);
+  const wallets: any = ref(null);
   const walletId: Ref<string> = ref('');
   const walletKey: Ref<string> = ref('');
 
   // actions
   function resetState() {
     reservation.value = null;
+    reservationDetails.value = '';
     status.value = '';
     walletId.value = '';
     walletKey.value = '';
   }
 
+  // TODO: Remove this functionality
   async function makeReservation(payload: any = {}) {
     console.log('> reservationStore.makeReservation');
     error.value = null;
@@ -89,6 +100,7 @@ export const useReservationStore = defineStore('reservation', () => {
     return reservation.value;
   }
 
+  // TODO: Review if we still need this functionality
   async function checkReservation(reservationId: string, email: string) {
     console.log('> reservationStore.checkReservation');
     resetState();
@@ -100,11 +112,11 @@ export const useReservationStore = defineStore('reservation', () => {
       .then((res) => {
         if (res.data) {
           // The API doesn't check email address against res ID but we can do it on the front end at least
-          if (res.data.contact_email !== email) {
+          if (res.data.contact_email.toLowerCase() !== email.toLowerCase()) {
             status.value = RESERVATION_STATUSES.NOT_FOUND;
           } else {
             reservation.value = res.data;
-            status.value = res.data.state;
+            status.value = RESERVATION_STATUSES.APPROVED;
           }
         }
       })
@@ -130,8 +142,94 @@ export const useReservationStore = defineStore('reservation', () => {
     return status.value;
   }
 
+  async function authenticateAndGetReservationId(email: string, password: string) {
+    console.log('> reservationStore.authenticateAndGetReservationId');
+    error.value = null;
+    loading.value = true;
+
+    // Request body
+    const body = {
+      email: email,
+      password: password,
+    };
+
+    // Make api call to authenticate with APIM and if auth'd get reservation id to then checkIn()
+    // TODO: Review if we want to make this api call separate Azure func or an aca-py plugin
+    // TODO: Refactor to use axios, as in all other api calls in this project
+    const response = await fetch(
+        // TODO: Move api url to env var
+        "https://pidi-dev-subscriber-management-handlers.azurewebsites.net/api/authenticateNewPidiWallet?",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Cache-Control": "no-cache",
+                "Ocp-Apim-Subscription-Key": "0facb0bea0694f998ea68516ee14805e",
+            },
+            body: JSON.stringify(body),
+        }
+    );
+
+    if(response.status === 401) {
+      error.value = "Authentication failed. Check your username and password.";
+      loading.value = false;
+      throw error.value;
+    }
+
+    if(response.status === 204) {
+      error.value = "New wallet subscription not found";
+      loading.value = false;
+      throw error.value;
+    }
+
+    if(response.status === 500) {
+      error.value = "An error occurred. Please contact info@presidioidentity.com and let them know what happened.";
+      loading.value = false;
+      throw error.value;
+    }
+
+    const data = await response.json();
+
+    console.log("response, data");
+    console.log(response);
+    console.log(data);
+
+    // TODO: remove this and use v-for of reservations
+    const tenantNames = [];
+    for (let i = 0; i < data.pending_reservations.length; i++)
+      tenantNames.push(data.pending_reservations[i].tenant_name);
+
+    // If we have a reservation ID, then reservation status is 'APPROVED'
+    reservationId.value = data.reservation_id;
+    reservation.value = data.pending_reservations;
+    reservationNames.value = tenantNames;
+
+    status.value = RESERVATION_STATUSES.APPROVED;
+    loading.value = false;
+  }
+
+  async function getReservationDetails(reservationName: string) {
+    const reservations = reservation.value;
+    const foundReservation = reservations.find(
+      (r: any) => r.tenant_name === reservationName
+    );
+
+    reservationId.value = foundReservation.reservation_id;
+    reservationDetails.value = foundReservation;
+  }
+
+  async function getApprovedWallets(subscriptions: any) {
+    const approved = await subscriptions.filter((s: any) => {
+      return !reservation.value.some((r: any) => {
+        return s.displayName === r.tenant_name;
+      });
+    });
+    console.log(approved);
+    approvedWallets.value = approved;
+  }
+
   async function checkIn(reservationId: string, password: string) {
-    console.log('> reservationStore.checkIn');
+    console.log('> reservationStore.checkIn', reservationId);
     error.value = null;
     loading.value = true;
     await api
@@ -161,15 +259,24 @@ export const useReservationStore = defineStore('reservation', () => {
 
   return {
     reservation,
+    reservationId,
+    reservationDetails,
+    reservationNames,
     loading,
+    loadingWallets,
     error,
     status,
+    approvedWallets,
+    wallets,
     walletId,
     walletKey,
     resetState,
-    makeReservation,
-    checkReservation,
-    checkIn,
+    getApprovedWallets,
+    makeReservation, // TODO: Remove 
+    authenticateAndGetReservationId,
+    checkReservation, // TODO: Remove
+    getReservationDetails, // TODO: Remove
+    checkIn, // TODO: Remove
   };
 });
 

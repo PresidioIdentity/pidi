@@ -1,153 +1,160 @@
 <template>
-  <h3 class="mt-0">Verifications</h3>
-
-  <DataTable
-    v-model:selection="selectedPresentation"
-    v-model:expandedRows="expandedRows"
-    :loading="loading"
-    :value="presentations"
-    data-key="verifier_presentation_id"
-    :paginator="true"
-    :rows="TABLE_OPT.ROWS_DEFAULT"
-    :rows-per-page-options="TABLE_OPT.ROWS_OPTIONS"
-    selection-mode="single"
-  >
-    <template #header>
-      <div class="flex justify-content-between">
-        <div class="flex justify-content-start">
-          <SuperYou
-            :api-url="apiUrl"
-            :template-json="templateJson"
-            text="Create Presentation Request"
-            icon="pi-key"
-            @success="loadTable"
-          />
-        </div>
-        <div class="flex justify-content-end">
-          <span class="p-input-icon-left varification-search">
-            <i class="pi pi-search" />
-            <InputText
-              v-model="filter.name.value"
-              placeholder="Search Verifications"
+  <h3> Verification </h3>
+    <DataTable
+      v-model:selection="selectedPresentation"
+      v-model:filters="filter"
+      v-model:expandedRows="expandedRows"
+      :loading="loading"
+      :value="presentations"
+      data-key="presentation_exchange_id"
+      :paginator="true"
+      :global-filter-fields="[
+        'presentation_request.name',
+        'presentation_request_dict.comment',
+      ]"
+      :rows="TABLE_OPT.ROWS_DEFAULT"
+      :rows-per-page-options="TABLE_OPT.ROWS_OPTIONS"
+      selection-mode="single"
+      sort-field="created_at"
+      :sort-order="-1"
+    >
+      <template #header>
+        <div class="flex justify-content-between">
+          <div class="flex justify-content-start">
+            <CreateRequest
             />
-          </span>
-          <Button
-            icon="pi pi-refresh"
-            class="p-button-rounded p-button-outlined"
-            title="Refresh Table"
-            @click="loadTable"
-          />
+          </div>
+
+          <div class="flex justify-content-end">
+            <span class="p-input-icon-left">
+              <i class="pi pi-search" />
+              <InputText
+                v-model="filter['global'].value"
+                placeholder="Search Verifications"
+              />
+            </span>
+          </div>
         </div>
-      </div>
-    </template>
-    <template #empty> No records found. </template>
-    <template #loading> Loading data. Please wait... </template>
-    <Column :expander="true" header-style="width: 3rem" />
-    <Column :sortable="true" field="name" header="Name" />
-    <Column :sortable="true" field="contact.alias" header="Contact Name" />
-    <Column :sortable="true" field="status" header="Status">
-      <template #body="{ data }">
-        <StatusChip :status="data.status" />
       </template>
-    </Column>
-    <Column :sortable="true" field="created_at" header="Created at">
-      <template #body="{ data }">
-        {{ formatDateLong(data.created_at) }}
-      </template>
-    </Column>
-    <template #expansion="{ data }">
-      <PresentationRowExpandData
+      <template #empty>{{ $t('common.noRecordsFound') }}</template>
+      <template #loading>{{ $t('common.loading') }}</template>
+      <Column :expander="true" header-style="width: 3rem" />
+      <Column :sortable="false" :header="$t('common.actions')">
+        <template #body="{ data }">
+          <div class="flex">
+            <DeleteExchangeRecord
+              :record-id="data.presentation_exchange_id"
+            />
+            <CreateRequest
+              v-if="
+                data.role === 'verifier' &&
+                (config.frontend.showWritableComponents === true ||
+                  config.frontend.showWritableComponents === 'true')
+              "
+              :existing-pres-req="data.presentation_request"
+              icon-display
+            />
+          </div>
+        </template>
+      </Column>
+      <Column
+        :sortable="true"
+        field="presentation_request.name"
+        header="Name"
+      />
+      <Column :sortable="true" field="role" header="Role" />
+      <Column :sortable="true" field="connection_id" header="Connection">
+        <template #body="{ data }">
+          <LoadingLabel :value="findConnectionName(data.connection_id)" />
+        </template>
+      </Column>
+      <Column :sortable="true" field="status" header="Status">
+        <template #body="{ data }">
+          <StatusChip :status="data.state" />
+        </template>
+      </Column>
+      <Column
+        :sortable="true"
+        field="presentation_request_dict.comment"
+        header="Comment"
+      />
+      <Column :sortable="true" field="created_at" header="Created at">
+        <template #body="{ data }">
+          {{ formatDateLong(data.created_at) }}
+        </template>
+      </Column>
+      <template #expansion="{ data }">
+        <!-- <PresentationRowExpandData
         :row="data"
         :header="false"
         :show-information="true"
-      />
-    </template>
-  </DataTable>
+      /> -->
+        <RowExpandData
+          :id="data.presentation_exchange_id"
+          :url="API_PATH.PRESENT_PROOF_RECORDS"
+        />
+      </template>
+    </DataTable>
 </template>
 
 <script setup lang="ts">
+// Vue
 import { onMounted, ref } from 'vue';
+// PrimeVue
+import { FilterMatchMode } from 'primevue/api';
 import Column from 'primevue/column';
 import DataTable from 'primevue/datatable';
-import Button from 'primevue/button';
-import { useToast } from 'vue-toastification';
 import InputText from 'primevue/inputtext';
-import { FilterMatchMode } from 'primevue/api';
-
-import { useVerifierStore } from '../../store';
+import { useToast } from 'vue-toastification';
+// State
+import { useContactsStore, useVerifierStore } from '@/store';
 import { storeToRefs } from 'pinia';
-
-import PresentationRowExpandData from './PresentationRowExpandData.vue';
-import { API_PATH, TABLE_OPT } from '@/helpers/constants';
+import { useConfigStore } from '@/store/configStore';
+// Components
+import MainCardContent from '@/components/layout/mainCard/MainCardContent.vue';
+import CreateRequest from './createPresentationRequest/CreateRequest.vue';
+import DeleteExchangeRecord from './DeleteExchangeRecord.vue';
+// import PresentationRowExpandData from './PresentationRowExpandData.vue';
+import LoadingLabel from '@/components/common/LoadingLabel.vue';
+import RowExpandData from '@/components/common/RowExpandData.vue';
+import StatusChip from '@/components/common/StatusChip.vue';
 import { formatDateLong } from '@/helpers';
-import StatusChip from '../common/StatusChip.vue';
-import SuperYou from '@/components/common/SuperYou.vue';
+import { API_PATH, TABLE_OPT } from '@/helpers/constants';
+
 const toast = useToast();
 
-const apiUrl = API_PATH.VERIFIER_PRESENTATION_ADHOC_REQUEST;
-
-const templateJson = {
-  contact_id: '67f68781-4dd9-49ad-9a5e-1e9a06e901f4',
-  connection_id: '6530a727-8c05-4818-a1bb-687117afbd44',
-  proof_request: {
-    requested_attributes: [
-      {
-        name: 'string',
-        names: ['string'],
-        non_revoked: {},
-        restrictions: [{}],
-      },
-    ],
-    requested_predicates: [
-      {
-        name: 'string',
-        p_type: '<',
-        p_value: 0,
-        non_revoked: {},
-        restrictions: [{}],
-      },
-    ],
-    non_revoked: {},
-  },
-  name: 'string',
-  version: '1.0.0',
-  external_reference_id: 'string',
-  comment: 'string',
-  tags: [],
-};
-// used by datatable expander behind the scenes
-const expandedRows = ref([]);
-
+// State
+const { listContacts, findConnectionName } = useContactsStore();
 const verifierStore = useVerifierStore();
-// use the loading state from the store to disable the button...
+const { contacts } = storeToRefs(useContactsStore());
 const { loading, presentations, selectedPresentation } = storeToRefs(
   useVerifierStore()
 );
+const { config } = storeToRefs(useConfigStore());
 
 const loadTable = async () => {
   verifierStore.listPresentations().catch((err) => {
     toast.error(`Failure: ${err}`);
   });
+  
+  // Load contacts if not already there for display
+  if (!contacts.value || !contacts.value.length) {
+    listContacts().catch((err) => {
+      console.error(err);
+      toast.error(`Failure: ${err}`);
+    });
+  }
 };
 
 onMounted(async () => {
   loadTable();
 });
 
+// used by datatable expander behind the scenes
+const expandedRows = ref([]);
+
 const filter = ref({
-  name: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
 </script>
 
-<style scoped>
-.p-datatable-header input {
-  padding-left: 3rem;
-  margin-right: 1.5rem;
-}
-.varification-search {
-  margin-left: 1.5rem;
-}
-.varification-search input {
-  padding-left: 3rem !important;
-}
-</style>

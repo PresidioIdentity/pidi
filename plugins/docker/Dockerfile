@@ -17,6 +17,7 @@ COPY --chown=indy:indy pyproject.toml README.md ./
 # copy over our local plugins code so we can build/install them
 # these should come from github or some version, published location
 COPY --chown=indy:indy basicmessage_storage ./basicmessage_storage
+COPY --chown=indy:indy acapy_plugin_qa ./acapy_plugin_qa
 COPY --chown=indy:indy connection_update ./connection_update
 COPY --chown=indy:indy multitenant_provider ./multitenant_provider
 COPY --chown=indy:indy traction_innkeeper ./traction_innkeeper
@@ -27,12 +28,13 @@ RUN poetry install --no-dev
 RUN ln -s $(poetry env info -p)/lib/python3.6/site-packages site-packages
 
 
-FROM bcgovimages/aries-cloudagent:py36-1.16-1_1.0.0-rc1
+FROM bcgovimages/aries-cloudagent:py36-1.16-1_1.0.0-rc1 
 COPY --from=base --chown=indy:indy /home/indy/.venv /home/indy/.venv
 ENV PATH="/home/indy/.venv/bin:$PATH"
 
 COPY --chown=indy:indy docker/default.yml ./
 COPY --chown=indy:indy basicmessage_storage/basicmessage_storage traction_plugins/basicmessage_storage
+COPY --chown=indy:indy acapy_plugin_qa/acapy_plugin_qa traction_plugins/acapy_plugin_qa
 COPY --chown=indy:indy connection_update/connection_update traction_plugins/connection_update
 COPY --chown=indy:indy multitenant_provider/multitenant_provider traction_plugins/multitenant_provider
 COPY --chown=indy:indy traction_innkeeper/traction_innkeeper traction_plugins/traction_innkeeper

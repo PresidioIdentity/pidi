@@ -18,6 +18,7 @@ basicmessage_storage = {path = "./basicmessage_storage", develop = true}
 connection_update = {path = "./connection_update", develop = true}
 multitenant-provider = {path = "./multitenant_provider", develop = true}
 traction-innkeeper = {path = "./traction_innkeeper", develop = true}
+acapy_plugin_qa = {path = "./acapy_plugin_qa", develop = true}
 
 [tool.poetry.dev-dependencies]
 black = "^22.6.0"

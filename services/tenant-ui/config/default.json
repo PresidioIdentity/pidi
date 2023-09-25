@@ -1,6 +1,6 @@
 {
   "frontend": {
-    "tenantProxyPath": "http://localhost:8032",
+    "tenantProxyPath": "https://pi-apim-development.azure-api.net/pidi",
     "apiPath": "api/",
     "basePath": "/",
     "showDeveloper": true,
@@ -13,14 +13,14 @@
       "label": "IDIR"
     },
     "ux": {
-      "appTitle": "Traction Tenant Console",
-      "appInnkeeperTitle": "Traction Innkeeper Console",
-      "sidebarTitle": "TRACTION",
+      "appTitle": "US CBP Tenant Console",
+      "appInnkeeperTitle": "US CBP Admin Console",
+      "sidebarTitle": "US CBP",
       "copyright": "",
       "owner": "",
       "coverImageCopyright": "Photo by Kristoffer Fredriksson on StockSnap",
       "aboutBusiness": {
-        "title": "Government of British Columbia",
+        "title": "United States Customs and Border Protection",
         "linkTitle": "BC Digital Trust Service Agreement",
         "link": "https://github.com/bcgov/bc-vcpedia/blob/main/agents/bc-gov-agent-service.md",
         "imageUrl": "/img/bc/bc_logo.png"
@@ -45,7 +45,7 @@
     "logLevel": "http",
     "port": "8080",
     "staticFiles": "../../frontend/dist",
-    "tractionUrl": "http://localhost:5100",
+    "tractionUrl": "https://pi-apim-development.azure-api.net/pidi",
     "oidc": {
       "jwksUri": "https://dev.loginproxy.gov.bc.ca/auth/realms/digitaltrust-nrm/protocol/openid-connect/certs",
       "realm": "digitaltrust-nrm",

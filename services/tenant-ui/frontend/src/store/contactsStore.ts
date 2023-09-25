@@ -40,6 +40,15 @@ export const useContactsStore = defineStore('contacts', () => {
     contacts.value.filter((c) => c.state === CONNECTION_STATUSES.INVITATION)
   );
 
+  const findConnectionName = computed(() => (connectionId: string) => {
+    if (loading.value) return undefined;
+    // Find the connection alias for an ID
+    const connection = contacts.value?.find((c: any) => {
+      return c.connection_id === connectionId;
+    });
+    return connection && connection.alias ? connection.alias : '';
+  });
+
   // actions
 
   // grab the tenant api
@@ -128,6 +137,106 @@ export const useContactsStore = defineStore('contacts', () => {
     }
     // return data so $onAction.after listeners can add their own handler
     return acceptedData;
+  }
+
+  async function sendContactQuestion(connectionId: string) {
+    console.log('> contactsStore.sendContactQuestion');
+
+    error.value = null;
+    loading.value = true;
+
+    const body = 
+    {
+        "@type": "questionanswer/1.0/question",
+        "question_text": "Are you a here?",
+        "question_detail": "Verifying that the Q&A Handler works via integration tests",
+        "valid_responses": [
+            { "text": "yes" },
+            { "text": "no" }
+        ]
+    }
+
+    let result = null;
+
+    await acapyApi.postHttp(API_PATH.QUESTION_ANSWER_SEND_QUESTION(connectionId), body)
+    .then((res) => {
+        console.log('question sent');
+        console.log(body);
+      })
+      .catch((err) => {
+        error.value = err;
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+    console.log('< contactsStore.sendContactQuestion');
+
+    if (error.value != null) {
+      // throw error so $onAction.onError listeners can add their own handler
+      throw error.value;
+    }
+  }
+
+  async function sendContactAnswer(threadId: string) {
+    console.log('> contactsStore.sendContactAnswer');
+
+    error.value = null;
+    loading.value = true;
+
+    const body = 
+    {
+      "@type": "questionanswer/1.0/answer",
+      "@id": threadId,
+      "response": "yes"
+    };
+
+    let result = null;
+
+    await acapyApi.postHttp(API_PATH.QUESTION_ANSWER_SEND_ANSWER(threadId), body)
+    .then((res) => {
+        console.log('answer sent');
+        console.log(body);
+      })
+      .catch((err) => {
+        error.value = err;
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+    console.log('< contactsStore.sendContactAnswer');
+
+    if (error.value != null) {
+      // throw error so $onAction.onError listeners can add their own handler
+      throw error.value;
+    }
+
+  }
+
+  async function getContactQuestions() {
+    console.log('> contactsStore.getContactQuestions');
+
+    error.value = null;
+    loading.value = true;
+
+    let result = null;
+
+    await acapyApi.getHttp(API_PATH.QUESTION_ANSWER_GET_QUESTIONS)
+    .then((res) => {
+        result = res.data;
+    })
+    .catch((err) => {
+      error.value = err;
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+    console.log('< contactsStore.getContactQuestions');
+
+    if (error.value != null) {
+      throw error.value;
+    }
+    
+    return result;
   }
 
   async function deleteContact(connectionId: string) {
@@ -274,6 +383,7 @@ export const useContactsStore = defineStore('contacts', () => {
     error,
     filteredConnections,
     filteredInvitations,
+    findConnectionName,
     listContacts,
     createInvitation,
     receiveInvitation,
@@ -282,6 +392,9 @@ export const useContactsStore = defineStore('contacts', () => {
     getInvitation,
     updateConnection,
     didCreateRequest,
+    sendContactQuestion,
+    getContactQuestions,
+    sendContactAnswer,
   };
 });
 

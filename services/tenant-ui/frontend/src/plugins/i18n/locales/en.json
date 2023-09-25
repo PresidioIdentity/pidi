@@ -51,7 +51,12 @@
   "verify": {
     "verification": "Verification",
     "verifications": "Verifications",
-    "createRequest": "Create Presentation Requests"
+    "autoVerify": "Auto Verify",
+    "autoVerifyHelp": "Verifier choice to auto-verify proof presentation",
+    "comment": "Optional Comment",
+    "connection": "Connection",
+    "createRequest": "Create Presentation Request",
+    "presentationRequestBody": "Proof Request"
   },
   "holder": {
     "holder": "Holder",
