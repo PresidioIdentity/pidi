@@ -11,8 +11,9 @@
     </template>
 
     <template #end>
+      <img src="/img/CBP-logo-blue-lettering.png" alt="US CBP header image"/>
+      <br/>
       <LocaleSwitcher />
-
       <ProfileButton />
     </template>
   </Toolbar>

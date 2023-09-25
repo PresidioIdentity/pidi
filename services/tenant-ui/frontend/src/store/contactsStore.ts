@@ -40,6 +40,15 @@ export const useContactsStore = defineStore('contacts', () => {
     contacts.value.filter((c) => c.state === CONNECTION_STATUSES.INVITATION)
   );
 
+  const findConnectionName = computed(() => (connectionId: string) => {
+    if (loading.value) return undefined;
+    // Find the connection alias for an ID
+    const connection = contacts.value?.find((c: any) => {
+      return c.connection_id === connectionId;
+    });
+    return connection && connection.alias ? connection.alias : '';
+  });
+
   // actions
 
   // grab the tenant api
@@ -138,8 +147,8 @@ export const useContactsStore = defineStore('contacts', () => {
 
     const body = 
     {
-        "@type": "https://didcomm.org/questionanswer/1.0/question",
-        "question_text": "Are you a test agent?",
+        "@type": "questionanswer/1.0/question",
+        "question_text": "Are you a here?",
         "question_detail": "Verifying that the Q&A Handler works via integration tests",
         "valid_responses": [
             { "text": "yes" },
@@ -176,7 +185,7 @@ export const useContactsStore = defineStore('contacts', () => {
 
     const body = 
     {
-      "@type": "https://didcomm.org/questionanswer/1.0/answer",
+      "@type": "questionanswer/1.0/answer",
       "@id": threadId,
       "response": "yes"
     };
@@ -374,6 +383,7 @@ export const useContactsStore = defineStore('contacts', () => {
     error,
     filteredConnections,
     filteredInvitations,
+    findConnectionName,
     listContacts,
     createInvitation,
     receiveInvitation,

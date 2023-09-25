@@ -15,7 +15,7 @@ export const useReservationStore = defineStore('reservation', () => {
   const api = axios.create({
     baseURL: config.value.frontend.tenantProxyPath,
     headers: {
-      'Ocp-Apim-Subscription-Key': '0b7ba83125f44e71936e2bc3cd31b083',
+      'Ocp-Apim-Subscription-Key': '0facb0bea0694f998ea68516ee14805e',
     }
   });
 
@@ -158,13 +158,13 @@ export const useReservationStore = defineStore('reservation', () => {
     // TODO: Refactor to use axios, as in all other api calls in this project
     const response = await fetch(
         // TODO: Move api url to env var
-        "https://pidi-monetization-newsub-webhook-handler.azurewebsites.net/api/authenticateNewPidiWallet?",
+        "https://pidi-dev-subscriber-management-handlers.azurewebsites.net/api/authenticateNewPidiWallet?",
         {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Cache-Control": "no-cache",
-                "Ocp-Apim-Subscription-Key": "0b7ba83125f44e71936e2bc3cd31b083",
+                "Ocp-Apim-Subscription-Key": "0facb0bea0694f998ea68516ee14805e",
             },
             body: JSON.stringify(body),
         }

@@ -40,7 +40,7 @@ export const useInnkeeperTenantsStore = defineStore('innkeeperTenants', () => {
   const backendApi = axios.create({
     baseURL: `${window.location.origin}/${config.value.frontend.apiPath}`,
     headers: {
-      "Ocp-Apim-Subscription-Key": "0b7ba83125f44e71936e2bc3cd31b083"
+      "Ocp-Apim-Subscription-Key": "0facb0bea0694f998ea68516ee14805e"
     }
   });
 

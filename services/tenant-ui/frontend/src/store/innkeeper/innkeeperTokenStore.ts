@@ -15,7 +15,7 @@ export const useInnkeeperTokenStore = defineStore(
     const api = axios.create({
       baseURL: config.value.frontend.tenantProxyPath,
       headers: {
-        "Ocp-Apim-Subscription-Key": "0b7ba83125f44e71936e2bc3cd31b083"
+        "Ocp-Apim-Subscription-Key": "0facb0bea0694f998ea68516ee14805e"
       }
     });
 

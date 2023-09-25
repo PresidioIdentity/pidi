@@ -30,7 +30,7 @@
               Register and subscribe for access at our
 
               <a
-                href="https://pi-apim-development.developer.azure-api.net/"
+                href="https://pi-apim-devtest.developer.azure-api.net/"
                 class="p-button-link login-mode"
                 >Developer Portal</a
               >
